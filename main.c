@@ -8,6 +8,7 @@ int main()
 	char	*input;
 	t_tokenizer *tokens;
 	t_tokenizer	*temp;
+	t_ast		*ast;
 	int i = 0;
 
 	//signal_handler();
@@ -15,6 +16,7 @@ int main()
 	//check_quo_error();
 	//fix_input(input);
 	tokens = tokenizer(input);
+	ast = ast_builder(tokens);
 	temp = tokens;
 	printf("_____________________\n");
 	while (temp != NULL)

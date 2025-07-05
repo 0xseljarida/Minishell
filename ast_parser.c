@@ -11,12 +11,13 @@ t_ast *add_tree_node(void)
 		return (NULL);
 	}
 	tree_node->type = -1;
-	tree_node->rdc = -1;
+	tree_node->rdc = NULL;
 	tree_node->cmd_line = NULL;
 	tree_node->right = NULL;
 	tree_node->left = NULL;
 	return (tree_node);
 }
+
 void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 {
 	t_redirections	*rdc;
@@ -24,10 +25,10 @@ void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 	tree_node->rdc = rdc;
 	while (cmd_line->str != NULL && cmd_line->op != PIPE)
 	{
-		if (is_operator(cmd_line->op) < PIPE)
+		if (cmd_line->op != -1 && cmd_line->op < PIPE)
 		{
-			if (is_operator(cmd_line->op) == LESS_LESS)
-				//the herdoc function TODO
+			// if (is_operator(cmd_line->op) == LESS_LESS)
+			// 	the herdoc function TODO
 			rdc = rdc->next;
 			rdc = malloc(sizeof(t_redirections));	
 			rdc->type = cmd_line->op;
@@ -36,16 +37,15 @@ void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 			else
 			{
 				//free_and_exit error;
-				return (NULL);
 			}
 			cmd_line = cmd_line->next->next;
 		}
 	}
 }
+
 t_ast *fill_tree_node(t_tokenizer *cmd_line)
 {
 	t_ast			*tree_node;
-	t_redirections	*rdc;
 
 	tree_node = malloc(sizeof(t_ast));
 	tree_node->type = CMD;
@@ -55,15 +55,25 @@ t_ast *fill_tree_node(t_tokenizer *cmd_line)
 	return (tree_node);
 }
 
+int	check_no_pipe(t_tokenizer *token)
+{
+	int	pipe_count;
+
+	pipe_count = 0;
+	while (token != NULL)
+		if (token->op == PIPE)
+			pipe_count++;
+	return (pipe_count);
+}
 t_ast	*ast_builder(t_tokenizer *token)
 {
 	t_ast		*tree_head;
 	t_ast		*tree_node;
-	char		*cmd;
 	t_tokenizer	*cmd_head;
 
 	cmd_head = token;
-	// check_no_pipe(token);
+	// if (check_no_pipe(token) == 0);
+	// 	return node_no_pipe(token);
 	tree_node = add_tree_node();
 	tree_head = tree_node;
 	// free&exit();
@@ -71,7 +81,7 @@ t_ast	*ast_builder(t_tokenizer *token)
 	{
 		if (token->next == NULL)
 			tree_node->right = fill_tree_node(cmd_head);
-		if (token->op == PIPE)
+		else if (token->op == PIPE)
 		{
 			tree_node->type = PIPE;
 			tree_node->left = fill_tree_node(cmd_head);
@@ -80,4 +90,5 @@ t_ast	*ast_builder(t_tokenizer *token)
 		}
 		token = token->next;
 	}
+	return (tree_head);
 }

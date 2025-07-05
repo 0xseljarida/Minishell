@@ -1,4 +1,4 @@
-SRC = main.c free_all.c tokenizer.c tokenizer_utils.c save_garbage.c
+SRC = main.c free_all.c tokenizer.c tokenizer_utils.c ast_parser.c parser_utils.c
 
 NAME = minishell
 HEADER = minishell.h

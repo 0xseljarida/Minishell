@@ -43,14 +43,6 @@ typedef enum e_quote
 	SPACE_BEFORE_AFTER,
 }			t_quote;
 
-typedef struct s_garbage_collector
-{
-	t_ast			*tree_node;
-	t_tokenizer		*token;
-	t_redirections	*rdc;
-
-}				t_garbage_collector;
-
 typedef struct s_tokenizer
 {
 	int					i;
@@ -66,7 +58,7 @@ typedef struct s_redirections
 	char			*str;
 	int				file_fd;
 	struct s_redirections	*next;
-
+	
 }			t_redirections;
 
 typedef struct s_ast
@@ -79,13 +71,21 @@ typedef struct s_ast
 	struct s_ast	*left;
 }				t_ast;
 
+typedef struct s_garbage_collector
+{
+	t_ast			*tree_node;
+	t_tokenizer		*token;
+	t_redirections	*rdc;
+
+}				t_garbage_collector;
+
 extern t_garbage_collector		*g_free;
 void	free_all(char *input, t_tokenizer *tokens);
 void	save_garbage(char **tokens, int is_arr);
-int		is_operator(char *str);
 /* TOKENIZER */
+int		is_operator(char *str);
 char	*alloc_quote_help(char *str, int *i);
-void	print_op(t_operator op, char *str);//
+void	print_op(t_operator op, char *str);
 void	fill_the_node_str(t_tokenizer *node, int i, char *token, t_quote quote_state);
 void	fill_the_node_op(t_tokenizer *node, int op, int i);
 t_tokenizer *tokenizer(char *input);

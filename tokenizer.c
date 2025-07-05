@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_tokenizer	*add_node(t_tokenizer **node)
+static t_tokenizer	*add_node(t_tokenizer **node)
 {
 	*node = malloc(sizeof(t_tokenizer));
 	if (*node == NULL)
@@ -12,7 +12,7 @@ t_tokenizer	*add_node(t_tokenizer **node)
 	return (*node);
 }
 
-int	alloc_str(char *input, int *i, t_tokenizer **node, int node_i)
+static int	alloc_str(char *input, int *i, t_tokenizer **node, int node_i)
 {
 	size_t		end;
 	char		*to_alloc;
@@ -37,7 +37,7 @@ int	alloc_str(char *input, int *i, t_tokenizer **node, int node_i)
 	return (*i);
 }
 
-int	alloc_quote(int i, char *input, t_tokenizer **node, int node_i)
+static int	alloc_quote(int i, char *input, t_tokenizer **node, int node_i)
 {
 	char	*to_alloc;
 	t_quote	quote_state;
@@ -63,7 +63,7 @@ int	alloc_quote(int i, char *input, t_tokenizer **node, int node_i)
 	return (i);
 }
 
-int	alloc_operator(int	*i, char *input, t_tokenizer **node, int node_i)
+static int	alloc_operator(int	*i, char *input, t_tokenizer **node, int node_i)
 {
 	if (!input[*i])
 		return (*i);
