@@ -2,26 +2,16 @@
 
 t_garbage_collector *g_free;
 
-int main()
+void	print_tokenizer(t_tokenizer *tokens)
 {
-
-	char	*input;
-	t_tokenizer *tokens;
-	t_tokenizer	*temp;
-	t_ast		*ast;
 	int i = 0;
+	t_tokenizer	*temp;
 
-	//signal_handler();
-	input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$\033[0m");
-	//check_quo_error();
-	//fix_input(input);
-	tokens = tokenizer(input);
-	ast = ast_builder(tokens);
 	temp = tokens;
 	printf("_____________________\n");
-	while (temp != NULL)
+	while (temp != NULL && temp->op != PIPE)
 	{
-		printf("%d",temp->i);
+		printf("%d - ",temp->i);
 		if (temp->op == -1)
 		{
 			printf("%s\n",temp->str);
@@ -33,6 +23,35 @@ int main()
 		i++;
 		printf("----------------\n");
 	}
-	temp = tokens;
+}
+
+int main()
+{
+
+	t_tokenizer *tokens;
+	t_ast		*ast;
+	char		*input;
+
+	//signal_handler();
+	input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$\033[0m");
+	//check_quo_error();
+	//fix_input(input);
+	tokens = tokenizer(input);
+	print_tokenizer(tokens);
+	ast = ast_builder(tokens);
+	printf("________NO_THE_TREE_________________");
+	printf("%s",ast->cmd);
+	// while (ast != NULL)
+	// {
+	// 	if (ast->type != PIPE)
+	// 	{
+	// 		print_tokenizer(ast->cmd_line);
+	// 	}
+	// 	if (ast->left != NULL && ast->left->type != PIPE)
+	// 	{
+	// 		print_tokenizer(ast->left->cmd_line);
+	// 	}
+	// 	ast = ast->left;
+	// }
 	free_all(input, tokens);
 }

@@ -32,14 +32,15 @@ void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 			rdc = rdc->next;
 			rdc = malloc(sizeof(t_redirections));	
 			rdc->type = cmd_line->op;
-			if (ft_isalpha(cmd_line->next->str[0]) != 0)
+			if (cmd_line->next != 0 && ft_isalpha(cmd_line->next->str[0]) != 0)
 				rdc->str = cmd_line->next->str;
-			else
-			{
-				//free_and_exit error;
-			}
-			cmd_line = cmd_line->next->next;
+			// else
+			// {
+			// 	//free_and_exit error;
+			// }
+			cmd_line = cmd_line->next;
 		}
+			cmd_line = cmd_line->next;
 	}
 }
 
@@ -47,11 +48,11 @@ t_ast *fill_tree_node(t_tokenizer *cmd_line)
 {
 	t_ast			*tree_node;
 
-	tree_node = malloc(sizeof(t_ast));
+	tree_node = add_tree_node();
 	tree_node->type = CMD;
 	tree_node->cmd = cmd_line->str;
 	tree_node->cmd_line = cmd_line;
-	handle_redirections(tree_node, cmd_line);
+	//handle_redirections(tree_node, cmd_line);
 	return (tree_node);
 }
 
@@ -65,6 +66,7 @@ int	check_no_pipe(t_tokenizer *token)
 			pipe_count++;
 	return (pipe_count);
 }
+
 t_ast	*ast_builder(t_tokenizer *token)
 {
 	t_ast		*tree_head;
@@ -80,7 +82,9 @@ t_ast	*ast_builder(t_tokenizer *token)
 	while (token != NULL)
 	{
 		if (token->next == NULL)
+		{
 			tree_node->right = fill_tree_node(cmd_head);
+		}
 		else if (token->op == PIPE)
 		{
 			tree_node->type = PIPE;

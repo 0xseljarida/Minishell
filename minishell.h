@@ -33,6 +33,7 @@ typedef enum e_operator
 	AND,
 	CMD,
 	WILDCARD,
+	NEXT,
 }				t_operator;
 
 typedef enum e_quote
@@ -89,6 +90,8 @@ void	print_op(t_operator op, char *str);
 void	fill_the_node_str(t_tokenizer *node, int i, char *token, t_quote quote_state);
 void	fill_the_node_op(t_tokenizer *node, int op, int i);
 t_tokenizer *tokenizer(char *input);
-t_tokenizer *add_node(t_tokenizer **node);
+
+/* AST_ PASRER */
+t_ast	*ast_builder(t_tokenizer *token);
 
 #endif
