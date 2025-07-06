@@ -11,11 +11,11 @@ void	print_tokenizer(t_tokenizer *tokens)
 	printf("_____________________\n");
 	while (temp != NULL && temp->op != PIPE)
 	{
-		printf("%d - ",temp->i);
+		printf("index : %d\n",temp->i);
 		if (temp->op == -1)
 		{
-			printf("%s\n",temp->str);
-			printf("%d\n",temp->quote_state);
+			printf("cmd   : %s\n",temp->str);
+			printf("quote : %d\n",temp->quote_state);
 		}
 		else
 			print_op(temp->op, temp->str);
@@ -25,6 +25,28 @@ void	print_tokenizer(t_tokenizer *tokens)
 	}
 }
 
+void	print_tree(t_ast	*ast)
+{
+	while (ast != NULL)
+	{
+		if (ast->type != PIPE)
+		{
+			print_tokenizer(ast->cmd_line);
+		}
+		if (ast->left != NULL && ast->left->type != PIPE)
+		{
+			print_tokenizer(ast->left->cmd_line);
+		}
+		ast = ast->left;
+	}
+}
+
+void	print_node(t_ast	*ast)
+{
+	if (ast->type == PIPE)
+		return ;
+	print_tokenizer(ast->cmd_line);
+}
 int main()
 {
 
@@ -39,19 +61,9 @@ int main()
 	tokens = tokenizer(input);
 	print_tokenizer(tokens);
 	ast = ast_builder(tokens);
-	printf("________NO_THE_TREE_________________");
-	printf("%s",ast->cmd);
-	// while (ast != NULL)
-	// {
-	// 	if (ast->type != PIPE)
-	// 	{
-	// 		print_tokenizer(ast->cmd_line);
-	// 	}
-	// 	if (ast->left != NULL && ast->left->type != PIPE)
-	// 	{
-	// 		print_tokenizer(ast->left->cmd_line);
-	// 	}
-	// 	ast = ast->left;
-	// }
+	printf("________________NO_THE_TREE_________________");
+	print_node(ast);
+	print_node(ast->left);
+	print_node(ast->right);
 	free_all(input, tokens);
 }

@@ -44,11 +44,8 @@ void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 	}
 }
 
-t_ast *fill_tree_node(t_tokenizer *cmd_line)
+t_ast *fill_tree_node(t_tokenizer *cmd_line, t_ast *tree_node)
 {
-	t_ast			*tree_node;
-
-	tree_node = add_tree_node();
 	tree_node->type = CMD;
 	tree_node->cmd = cmd_line->str;
 	tree_node->cmd_line = cmd_line;
@@ -73,23 +70,25 @@ t_ast	*ast_builder(t_tokenizer *token)
 	t_ast		*tree_node;
 	t_tokenizer	*cmd_head;
 
-	cmd_head = token;
 	// if (check_no_pipe(token) == 0);
 	// 	return node_no_pipe(token);
 	tree_node = add_tree_node();
 	tree_head = tree_node;
+	cmd_head = token;
 	// free&exit();
 	while (token != NULL)
 	{
 		if (token->next == NULL)
 		{
-			tree_node->right = fill_tree_node(cmd_head);
+			tree_node = fill_tree_node(cmd_head, tree_node);
 		}
 		else if (token->op == PIPE)
 		{
 			tree_node->type = PIPE;
-			tree_node->left = fill_tree_node(cmd_head);
-			tree_node = tree_node->right;
+			tree_node->left = add_tree_node();
+			tree_node->left = fill_tree_node(cmd_head, tree_node->left);
+			tree_node->right = add_tree_node();
+			tree_node = tree_node->right; // gotta fix ?
 			cmd_head = token->next;
 		}
 		token = token->next;
