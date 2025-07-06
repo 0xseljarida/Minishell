@@ -75,3 +75,8 @@ void	fill_the_node_str(t_tokenizer *node, int i, char *token,
 	node->str = token;
 	node->quote_state = quote_state;
 }
+
+char	is_quote(char c)
+{
+	return (c == '\'' || c == '\"');
+}

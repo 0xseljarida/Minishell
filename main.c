@@ -47,6 +47,25 @@ void	print_node(t_ast	*ast)
 		return ;
 	print_tokenizer(ast->cmd_line);
 }
+
+// char	*handle_input(char *input)
+// {
+// 	int	i;
+// 	int	len;
+
+// 	len = ft_strlen(input);
+// 	i = 0;
+// 	while (i )
+// 	if (input[i] == '\'' && input[i + 1] == '\'' ||
+// 		input[i] == '\"' && input[i + 1] == '\"')
+// 	{
+// 		while(i < len)	
+// 		{
+			
+// 		}
+// 	}
+// }
+
 int main()
 {
 
