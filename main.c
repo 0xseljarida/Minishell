@@ -66,7 +66,7 @@ void	print_node(t_ast	*ast)
 // 	}
 // }
 
-int main()
+int	main(int ac, char **av, char **env)
 {
 
 	t_tokenizer *tokens;
@@ -78,6 +78,7 @@ int main()
 	//check_quo_error();
 	//fix_input(input);
 	tokens = tokenizer(input);
+	expanding(tokens);
 	print_tokenizer(tokens);
 	ast = ast_builder(tokens);
 	printf("________________NO_THE_TREE_________________");

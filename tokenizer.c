@@ -28,6 +28,11 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int node_i)
 			end++;
 			while(is_quote(input[*i + end]) == 0)
 				end++;
+			if (is_quote(input[*i + end + 1]))
+			{
+				end++;
+				continue;
+			}
 		}
 		c = input[*i + end + 1];
 		op = is_operator(input + *i + end + 1);

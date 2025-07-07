@@ -78,5 +78,10 @@ void	fill_the_node_str(t_tokenizer *node, int i, char *token,
 
 char	is_quote(char c)
 {
-	return (c == '\'' || c == '\"');
+	if (c == '\'')
+		return ('\'');
+	else if (c == '\"')
+		return ('\"');
+	else 
+		return (0);
 }
