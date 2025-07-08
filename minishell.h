@@ -42,6 +42,8 @@ typedef enum e_quote
 	SPACE_BEFORE,
 	SPACE_AFTER,
 	SPACE_BEFORE_AFTER,
+	NO_QUOTE,
+	THERES_QUOTE,
 }			t_quote;
 
 typedef struct s_tokenizer

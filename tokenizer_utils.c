@@ -64,7 +64,8 @@ void	fill_the_node_op(t_tokenizer *node, int op, int i)
 	node->i = i;
 	node->op = op;
 	node->str = NULL;
-	node->quote_state = -1;
+	node->quote_state = THERES_QUOTE;
+	node->next = NULL;
 }
 
 void	fill_the_node_str(t_tokenizer *node, int i, char *token,
@@ -74,14 +75,15 @@ void	fill_the_node_str(t_tokenizer *node, int i, char *token,
 	node->op = -1; // -1 if it's no an operator 
 	node->str = token;
 	node->quote_state = quote_state;
+	node->next = NULL;
 }
 
 char	is_quote(char c)
 {
 	if (c == '\'')
-		return ('\'');
+		return (c);
 	else if (c == '\"')
-		return ('\"');
+		return (c);
 	else 
 		return (0);
 }

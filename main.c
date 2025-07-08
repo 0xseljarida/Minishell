@@ -9,7 +9,7 @@ void	print_tokenizer(t_tokenizer *tokens)
 
 	temp = tokens;
 	printf("_____________________\n");
-	while (temp != NULL && temp->op != PIPE)
+	while (temp != NULL)
 	{
 		printf("index : %d\n",temp->i);
 		if (temp->op == -1)
@@ -44,7 +44,7 @@ void	print_tree(t_ast	*ast)
 void	print_node(t_ast	*ast)
 {
 	if (ast->type == PIPE)
-		return ;
+		printf("\n_________PIPE____________\n");
 	print_tokenizer(ast->cmd_line);
 }
 
@@ -73,17 +73,23 @@ int	main(int ac, char **av, char **env)
 	t_ast		*ast;
 	char		*input;
 
+	(void)ac;
+	(void)av;
 	//signal_handler();
-	input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$\033[0m");
-	//check_quo_error();
-	//fix_input(input);
-	tokens = tokenizer(input);
-	expanding(tokens);
-	print_tokenizer(tokens);
-	ast = ast_builder(tokens);
-	printf("________________NO_THE_TREE_________________");
-	print_node(ast);
-	print_node(ast->left);
-	print_node(ast->right);
-	free_all(input, tokens);
+	while (1)
+	{
+		input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$ \033[0m");
+		//check_quo_error();
+		tokens = tokenizer(input);
+		//expanding(tokens);
+		print_tokenizer(tokens);
+		ast = ast_builder(tokens);
+		printf("________________NO_THE_TREE_________________");
+		print_node(ast);
+		printf("this is the right \n");
+		print_node(ast->left);
+		printf("this is the left \n");
+		print_node(ast->left);
+		free_all(input, tokens);
+	}
 }

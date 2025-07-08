@@ -14,6 +14,8 @@ void	remove_empty_quote(char *str, int start ,int end, char q)
 	{
 		str[start + i] = str[start + i + 1];
 		i++;
+		// if (q == '\"')
+		// 	expanding(i , );
 	}
 	start = end - 1;
 	i = 0;
@@ -42,8 +44,8 @@ int	quote_handling(char *str)
 			i++;
 			while (q != is_quote(str[i]))
 				i++;
-			// printf("%d %d", start , i);
-			// break;
+			 printf("%d %d", start , i);
+			 break;
 			remove_empty_quote(str, start, i, q);
 			i -= 2;
 		}
@@ -56,7 +58,8 @@ void expanding(t_tokenizer *token)
 {
 	while (token != NULL)
 	{
-		quote_handling(token->str);
+		if (token->quote_state != NO_QUOTE && token->op == -1)
+			quote_handling(token->str);
 		token = token->next;
 	}
 }
