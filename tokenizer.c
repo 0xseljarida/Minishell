@@ -31,12 +31,9 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int node_i)
 {
 	size_t		end;
 	char		*to_alloc;
-	char		c;
-	t_operator	op;
 
 	end = 0;
-	while (input[*i + end] != '\0' && is_operator(input + *i + end) != ' '
-		&& (is_operator(input + *i + end) || is_quote(input[*i + end])))
+	while (input[*i + end] != '\0' &&  input[*i + end] != ' ' && (is_operator(input + *i + end) == -1 || is_quote(input[*i + end])))
 	{
 		if (alloc_quote(input + *i, &end))
 			end--;
@@ -90,6 +87,7 @@ t_tokenizer	*tokenizer(char *input)
 		i++;
 		node_i++;
 	}
+	//node->next = NULL;
 	node = head;
 	head = head->next;
 	free(node);
