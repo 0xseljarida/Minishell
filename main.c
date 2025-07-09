@@ -2,51 +2,6 @@
 
 t_garbage_collector *g_free;
 
-void	print_tokenizer(t_tokenizer *tokens)
-{
-	int i = 0;
-	t_tokenizer	*temp;
-
-	temp = tokens;
-	printf("_____________________\n");
-	while (temp != NULL)
-	{
-		printf("index : %d\n",temp->i);
-		if (temp->op == -1)
-		{
-			printf("cmd   : %s\n",temp->str);
-			printf("quote : %d\n",temp->quote_state);
-		}
-		else
-			print_op(temp->op, temp->str);
-		temp = temp->next;
-		i++;
-		printf("----------------\n");
-	}
-}
-
-void	print_tree(t_ast	*ast)
-{
-	while (ast != NULL)
-	{
-		if (ast->type != PIPE)
-		{
-			print_tokenizer(ast->cmd_line);
-		}
-		if (ast->left != NULL && ast->left->type != PIPE)
-		{
-			print_tokenizer(ast->left->cmd_line);
-		}
-		ast = ast->left;
-	}
-}
-
-void	print_node(t_ast	*ast)
-{
-	if (ast->type == PIPE)
-		printf("\n_________PIPE____________\n");
-	print_tokenizer(ast->cmd_line);
-}
 
 // char	*handle_input(char *input)
 // {
@@ -72,10 +27,20 @@ int	main(int ac, char **av, char **env)
 	t_tokenizer *tokens;
 	t_ast		*ast;
 	char		*input;
-
+	t_env		*env_list;
 	(void)ac;
 	(void)av;
 	//signal_handler();
+	env_list =  save_env(env);
+	while(env_list != NULL)
+	{
+		printf("%s", env_list->name);
+		printf("=");
+		printf("%s\n", env_list->value);
+		printf("%s",env_list->next->name);
+		env_list = env_list->next;
+	}
+	return 0;
 	while (1)
 	{
 		input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$ \033[0m");

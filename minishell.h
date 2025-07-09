@@ -82,9 +82,21 @@ typedef struct s_garbage_collector
 
 }				t_garbage_collector;
 
+typedef struct s_env
+{
+	char	*name;
+	char	*value;	
+	struct s_env *next; 
+
+}t_env;
+
+void	print_node(t_ast	*ast);
+void	print_tree(t_ast	*ast);
+void	print_tokenizer(t_tokenizer *tokens);
 extern t_garbage_collector		*g_free;
 void	free_all(char *input, t_tokenizer *tokens);
 void	save_garbage(char **tokens, int is_arr);
+t_env 	*save_env(char **env);
 /* TOKENIZER */
 int		is_operator(char *str);
 char	*alloc_quote_help(char *str, int *i);
