@@ -39,26 +39,6 @@ char	*alloc_quote_help(char *str, int *i)
 	return (alc_str);
 }
 
-void	print_op(t_operator op, char *str)
-{
-	if (op == LESS_LESS)
-		printf("<<\n");
-	else if (op == GREAT_GREAT)
-		printf(">>\n");
-	else if (op == PIPE)
-		printf("|\n");
-	else if (op == LESS)
-		printf("<\n");
-	else if (op == GREAT)
-		printf(">\n");
-	else if (op == DOUBLE_QUOTE)
-		printf("\"\n");
-	else if (op == QUOTE)
-		printf("\'\n");
-	else
-		printf("something else");
-}
-
 void	fill_the_node_op(t_tokenizer *node, int op, int i)
 {
 	node->i = i;

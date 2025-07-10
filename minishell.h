@@ -90,17 +90,31 @@ typedef struct s_env
 
 }t_env;
 
+typedef struct s_glb
+{
+	t_ast			*ast;
+	t_env			*env;
+	t_tokenizer		*tokens;
+	t_redirections	*rdr;
+}t_glb;
+
+/* PRINT */
+t_glb	*glb_list(void);
+void	print_env(t_env *env_list);
 void	print_node(t_ast	*ast);
 void	print_tree(t_ast	*ast);
 void	print_tokenizer(t_tokenizer *tokens);
+void	print_op(t_operator op, char *str);
+
+/* FREE_EXIT*/
 extern t_garbage_collector		*g_free;
 void	free_all(char *input, t_tokenizer *tokens);
 void	save_garbage(char **tokens, int is_arr);
 t_env 	*save_env(char **env);
+
 /* TOKENIZER */
 int		is_operator(char *str);
 char	*alloc_quote_help(char *str, int *i);
-void	print_op(t_operator op, char *str);
 void	fill_the_node_str(t_tokenizer *node, int i, char *token, t_quote quote_state);
 void	fill_the_node_op(t_tokenizer *node, int op, int i);
 t_tokenizer *tokenizer(char *input);
@@ -108,5 +122,4 @@ void expanding(t_tokenizer *token);
 char	is_quote(char c);
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
-
 #endif

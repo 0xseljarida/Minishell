@@ -27,26 +27,18 @@ int	main(int ac, char **av, char **env)
 	t_tokenizer *tokens;
 	t_ast		*ast;
 	char		*input;
-	t_env		*env_list;
+
 	(void)ac;
 	(void)av;
 	//signal_handler();
-	env_list =  save_env(env);
-	while(env_list != NULL)
-	{
-		printf("%s", env_list->name);
-		printf("=");
-		printf("%s\n", env_list->value);
-		printf("%s",env_list->next->name);
-		env_list = env_list->next;
-	}
-	return 0;
+	glb_list()->env =  save_env(env);
+	// print_env(env_list);
 	while (1)
 	{
 		input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$ \033[0m");
 		//check_quo_error();
 		tokens = tokenizer(input);
-		//expanding(tokens);
+		expanding(tokens);
 		print_tokenizer(tokens);
 		ast = ast_builder(tokens);
 		printf("________________NO_THE_TREE_________________");

@@ -12,7 +12,7 @@ void	print_tokenizer(t_tokenizer *tokens)
 		printf("index : %d\n",temp->i);
 		if (temp->op == -1)
 		{
-			printf("cmd   : %s\n",temp->str);
+			printf("cmd   : %s = %zu\n",temp->str, ft_strlen(temp->str));
 			printf("quote : %d\n",temp->quote_state);
 		}
 		else
@@ -46,6 +46,26 @@ void	print_node(t_ast	*ast)
 	print_tokenizer(ast->cmd_line);
 }
 
+void	print_op(t_operator op, char *str)
+{
+	if (op == LESS_LESS)
+		printf("<<\n");
+	else if (op == GREAT_GREAT)
+		printf(">>\n");
+	else if (op == PIPE)
+		printf("|\n");
+	else if (op == LESS)
+		printf("<\n");
+	else if (op == GREAT)
+		printf(">\n");
+	else if (op == DOUBLE_QUOTE)
+		printf("\"\n");
+	else if (op == QUOTE)
+		printf("\'\n");
+	else
+		printf("something else");
+}
+
 t_env	*save_env(char **env)
 {
 	t_env	*env_list;
@@ -59,19 +79,33 @@ t_env	*save_env(char **env)
 	while (env[i] != 0)	
 	{
 		j = 0;
-		if (env_head == NULL)
-			env_head = env_list;
 		while (env[i][j] != '=')
 			j++;
 		env_list->name = ft_substr(env[i], 0, j);
 		env_list->value = ft_substr(env[i], j + 1, ft_strlen(env[i]));
 		i++;
-		if (env[i] == 0)
+		if (env[i] != NULL)
 			env_list->next = malloc(sizeof(t_env));
 		env_list = env_list->next;
 	}
-		printf("%s\n",env_head->name);
-		printf("%s \n",env_head->value);
 	env_list = NULL;
 	return (env_head);
+}
+
+void	print_env(t_env *env_list)
+{
+	while(env_list != NULL)
+	{
+		printf("%s", env_list->name);
+		printf("=");
+		printf("%s\n", env_list->value);
+		env_list = env_list->next;
+	}
+}
+
+t_glb 	*glb_list(void)
+{
+	static t_glb	glb;
+
+	return (&glb);
 }
