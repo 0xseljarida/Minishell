@@ -52,6 +52,11 @@ int	quote_handling(char *str)
 	return (0);
 }
 
+void	env_var(char *str)
+{
+	while (env_list->)	
+}
+
 void expanding(t_tokenizer *token)
 {
 	while (token != NULL)
@@ -60,6 +65,8 @@ void expanding(t_tokenizer *token)
 		{
 			quote_handling(token->str);
 		}
+		if (token->op == -1 && token->quote_state == NO_QUOTE)
+			env_var(token->str);
 		token = token->next;
 	}
 }

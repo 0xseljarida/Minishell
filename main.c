@@ -31,7 +31,7 @@ int	main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	//signal_handler();
-	glb_list()->env =  save_env(env);
+	glb_list()->env = save_env(env);
 	// print_env(env_list);
 	while (1)
 	{
