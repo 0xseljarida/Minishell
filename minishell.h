@@ -52,6 +52,7 @@ typedef struct s_tokenizer
 	char				*str;
 	t_quote				quote_state;
 	t_operator			op;
+	t_expantion			*exp;
 	struct s_tokenizer	*next;
 }				t_tokenizer;
 
@@ -98,6 +99,15 @@ typedef struct s_glb
 	t_redirections	*rdr;
 }t_glb;
 
+typedef struct s_expantion
+{
+	char	*value;
+	int		position_i;
+	int		start;
+	int		end;
+	struct s_expantion *next;
+}t_expantion;
+
 /* PRINT */
 t_glb	*glb_list(void);
 void	print_env(t_env *env_list);
@@ -120,6 +130,7 @@ void	fill_the_node_op(t_tokenizer *node, int op, int i);
 t_tokenizer *tokenizer(char *input);
 void expanding(t_tokenizer *token);
 char	is_quote(char c);
+char *check_env(char *str, t_env *env);
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
 #endif
