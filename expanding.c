@@ -53,37 +53,27 @@ int	quote_handling(char *str)
 }
 
 /*for other $? $!...*/
-char	*valid_expanding(char *str, int *start)
+int	valid_expanding(char *str, int *start)
 {
 	int			i;
-	char		*var;
 
-	i = 1;
-	var = NULL;
-	if (!ft_isprint(var[i]))
+	i = 0;
+	if (!ft_isalnum(str[1]))
+		return (0);
+	if (ft_isdigit(str[1]))
 	{
-		*start = 1;
-		return NULL;
-	}
-	while (!ft_isalnum(str[i]) && ft_isprint(str[i]))
-	{
-		*start = -1;
-		return (NULL);
+		*start = 2;
+		return (1);
 	}
 	while (ft_isalnum(str[i]))
-	{
-		if (i == 1 && ft_isdigit(str[i]))
-			break;
 		i++;
-	}
 	*start = i;
-	var = ft_substr(str, 1, i);
-	var = check_env(var, glb_list()->env);
-	return (var);
+	return (1);
 }
+
 void	env_var(t_tokenizer *token)
 {
-	int	i;
+	int			i;
 	t_expantion	*expd;
 	t_expantion	*head;
 	int			next_start;
@@ -94,12 +84,10 @@ void	env_var(t_tokenizer *token)
 	i = 0;
 	while (token->str[i] != 0)	
 	{
-		if (token->str[i] == '$')
+		if (token->str[i] == '$' && valid_expanding(token->str + i, next_start))
 		{
-			expd->next = malloc(sizeof(t_expantion));
-			expd = expd->next;
-			expd->value = valid_expanding(token->str + i, &next_start);	
-			expd->start = i + next_start;		
+			end = check_env(ft_substr(token->str, i, next_start), glb_list()->env);
+			re_alloc(token->str, i, end);
 		}
 		// else if(token->str[i] == '$' && !valide_expanding(token->str + i))
 	}
