@@ -47,6 +47,6 @@ int	main(int ac, char **av, char **env)
 		print_node(ast->left);
 		printf("this is the left \n");
 		print_node(ast->left);
-		free_all(input, tokens);
+		// free_all(input, tokens);
 	}
 }

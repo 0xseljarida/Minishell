@@ -9,7 +9,7 @@ char *check_env(char *str, t_env *env)
 {
 	while (env != 0)
 	{
-		if (ft_strcmp(str, env->name) == 0)
+		if (ft_strncmp(str, env->name, ft_strlen(env->name) + 1) == 0)
 		{
 			free(str);
 			return (env->value);

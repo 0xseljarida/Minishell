@@ -53,26 +53,26 @@ int	quote_handling(char *str)
 }
 
 /*for other $? $!...*/
-int	valide_expanding(char *str, int *start)
+char	*valid_expanding(char *str, int *start)
 {
 	int			i;
 	char		*var;
 
 	i = 1;
 	var = NULL;
-	if (str[i] == 0 || str[i] == ' ')
+	if (!ft_isprint(var[i]))
 	{
 		*start = 1;
-		return 0;
+		return NULL;
 	}
-	if (!is_alnum(str[i]))
+	while (!ft_isalnum(str[i]) && ft_isprint(str[i]))
 	{
-		*start = i;
-		return (0);
+		*start = -1;
+		return (NULL);
 	}
-	while (is_alnum(str[i]))
+	while (ft_isalnum(str[i]))
 	{
-		if (i == 1 && is_digit(str[i]))
+		if (i == 1 && ft_isdigit(str[i]))
 			break;
 		i++;
 	}
@@ -86,35 +86,34 @@ void	env_var(t_tokenizer *token)
 	int	i;
 	t_expantion	*expd;
 	t_expantion	*head;
-	int			*next_start;
+	int			next_start;
 
-	if (token->op != -1)
-		return ;
+
 	expd = malloc(sizeof(t_expantion));
 	head = expd;
-
+	i = 0;
 	while (token->str[i] != 0)	
 	{
 		if (token->str[i] == '$')
 		{
 			expd->next = malloc(sizeof(t_expantion));
 			expd = expd->next;
-			expd->value = valid_expanding(token->str + i, next_start);	
-			expd->start = i + *next_start;		
+			expd->value = valid_expanding(token->str + i, &next_start);	
+			expd->start = i + next_start;		
 		}
 		// else if(token->str[i] == '$' && !valide_expanding(token->str + i))
 	}
 	expd = head;
 	head = head->next;
 	free(expd);
-	return (head);
 }
 
 void expanding(t_tokenizer *token)
 {
 	while (token != NULL)
 	{
-		env_var(token);
+		// if (token->op != -1)
+		// 	env_var(token);
 		if (token->quote_state != NO_QUOTE && token->op == -1)
 		{
 			quote_handling(token->str);

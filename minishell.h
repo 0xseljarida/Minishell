@@ -46,6 +46,16 @@ typedef enum e_quote
 	THERES_QUOTE,
 }			t_quote;
 
+typedef struct s_expantion
+{
+	char	*value;
+	int		position_i;
+	int		start;
+	int		end;
+	struct s_expantion *next;
+}t_expantion;
+
+
 typedef struct s_tokenizer
 {
 	int					i;
@@ -98,15 +108,6 @@ typedef struct s_glb
 	t_tokenizer		*tokens;
 	t_redirections	*rdr;
 }t_glb;
-
-typedef struct s_expantion
-{
-	char	*value;
-	int		position_i;
-	int		start;
-	int		end;
-	struct s_expantion *next;
-}t_expantion;
 
 /* PRINT */
 t_glb	*glb_list(void);
