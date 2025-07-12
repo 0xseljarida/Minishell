@@ -98,7 +98,7 @@ void	print_env(t_env *env_list)
 	{
 		printf("%s", env_list->name);
 		printf("=");
-		printf("%s\n", env_list->value);
+		printf("%s %zu\n", env_list->value, ft_strlen(env_list->value));
 		env_list = env_list->next;
 	}
 }

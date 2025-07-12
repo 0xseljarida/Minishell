@@ -53,55 +53,54 @@ int	quote_handling(char *str)
 }
 
 /*for other $? $!...*/
-int	valid_expanding(char *str, int *start)
+int	valid_expanding(char *str, int *len)
 {
 	int			i;
 
-	i = 0;
+	i = 1;
 	if (!ft_isalnum(str[1]))
 		return (0);
 	if (ft_isdigit(str[1]))
 	{
-		*start = 2;
+		*len = 2;
 		return (1);
 	}
 	while (ft_isalnum(str[i]))
 		i++;
-	*start = i;
+	*len = i;
 	return (1);
 }
 
 void	env_var(t_tokenizer *token)
 {
 	int			i;
-	t_expantion	*expd;
-	t_expantion	*head;
-	int			next_start;
+	char		*env_value;
+	int			len;
 
-
-	expd = malloc(sizeof(t_expantion));
-	head = expd;
 	i = 0;
 	while (token->str[i] != 0)	
 	{
-		if (token->str[i] == '$' && valid_expanding(token->str + i, next_start))
+		if (token->str[i] == '\'')
 		{
-			end = check_env(ft_substr(token->str, i, next_start), glb_list()->env);
-			re_alloc(token->str, i, end);
+			i++;
+			while (token->str[i] != '\'')
+				i++;
 		}
-		// else if(token->str[i] == '$' && !valide_expanding(token->str + i))
+		if (token->str[i] == '$' && valid_expanding(token->str + i, &len))
+		{
+			env_value = check_env(ft_substr(token->str, i + 1, len - 1));
+			token->str = re_alloc(token->str, i, len, env_value);
+		}
+		i++;
 	}
-	expd = head;
-	head = head->next;
-	free(expd);
 }
 
 void expanding(t_tokenizer *token)
 {
 	while (token != NULL)
 	{
-		// if (token->op != -1)
-		// 	env_var(token);
+		if (token->op == -1)
+			env_var(token);
 		if (token->quote_state != NO_QUOTE && token->op == -1)
 		{
 			quote_handling(token->str);

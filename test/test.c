@@ -1,7 +1,12 @@
 #include "minishell.h"
 
-int main()
+int main(int ac, char **av, char **env)
 {
-	char *input = readline("hellow: ");
-	free(input);
+	int i = 0;
+	int j = 0;	
+	while (env[i] != 0)
+	{
+		printf("%s\n", env[i]);
+		i++;
+	}
 }

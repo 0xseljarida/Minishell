@@ -131,7 +131,11 @@ void	fill_the_node_op(t_tokenizer *node, int op, int i);
 t_tokenizer *tokenizer(char *input);
 void expanding(t_tokenizer *token);
 char	is_quote(char c);
-char *check_env(char *str, t_env *env);
+
+/*EXPANDING*/
+char *check_env(char *str);
+char	*re_alloc(char *str, int start, int len, char  *env_value);
+
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
 #endif
