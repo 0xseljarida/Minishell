@@ -49,3 +49,35 @@ char	*re_alloc(char *str, int start, int len, char  *env_value)
 	free(str);
 	return (new_str);
 }
+
+t_here_doc	*here_doc(t_tokenizer *token)
+{
+	char		*delemeter;
+	t_here_doc	*hd;
+	t_here_doc	*head;
+
+	hd = malloc(sizeof(t_here_doc));
+	head = hd;
+	if (token->next != NULL && token->next->op == -1) // the token->next->op could change cause after here doc if we got a op it's an error maybe!
+	{
+		hd->str = token->next->str; 
+		delemeter = hd->str;
+		hd->next = malloc(sizeof(t_here_doc));
+		hd = hd->next;
+	}
+	else
+	{
+		hd->str = readline("> ");
+		delemeter = hd->str;
+		hd->next = malloc(sizeof(t_here_doc));
+		hd = hd->next;
+	}
+	hd->str = readline("> ");
+	while (ft_strncmp(delemeter, hd->str, ft_strlen(hd->str)) != 0)
+	{
+		hd->next = malloc(sizeof(t_here_doc));
+		hd = hd->next;
+		hd->str = readline("> ");
+	}
+	return (head);
+}

@@ -55,6 +55,11 @@ typedef struct s_expantion
 	struct s_expantion *next;
 }t_expantion;
 
+typedef struct s_here_doc
+{
+	char				*str;
+	struct s_here_doc	*next;
+}t_here_doc;
 
 typedef struct s_tokenizer
 {
@@ -62,9 +67,12 @@ typedef struct s_tokenizer
 	char				*str;
 	t_quote				quote_state;
 	t_operator			op;
-	t_expantion			*exp;
+	t_here_doc			*hd;
+	t_expantion			*exp; // check_if_itexist
+
 	struct s_tokenizer	*next;
 }				t_tokenizer;
+
 
 typedef struct s_redirections
 {
@@ -135,7 +143,7 @@ char	is_quote(char c);
 /*EXPANDING*/
 char *check_env(char *str);
 char	*re_alloc(char *str, int start, int len, char  *env_value);
-void	here_doc(char *input);
+t_here_doc	*here_doc(t_tokenizer *token);
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
 #endif

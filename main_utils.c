@@ -109,19 +109,19 @@ t_glb 	*glb_list(void)
 
 	return (&glb);
 }
-char *here_doc(char *input)
-{
-	int	i;
-	char	*heredoc_input;
-	char	*temp;
+// char *here_doc(char *input)
+// {
+// 	int	i;
+// 	char	*heredoc_input;
+// 	char	*temp;
 
-	i = 0;
-	while (input[i])
-	{
-		if (is_operator(input + i) == LESS_LESS)
-		{
-			heredoc_input = readline("> ");	
-		}
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (input[i])
+// 	{
+// 		if (is_operator(input + i) == LESS_LESS)
+// 		{
+// 			heredoc_input = readline("> ");	
+// 		}
+// 		i++;
+// 	}
+// }

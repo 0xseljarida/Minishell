@@ -97,20 +97,16 @@ void	env_var(t_tokenizer *token)
 
 void expanding(t_tokenizer *token)
 {
-	t_tokenizer	*temp;
-
 	while (token != NULL)
 	{
 		if (token->op == LESS_LESS)
-		{
-			input 
-		}
+			token->hd = here_doc(token);	
+		else
+			token->hd = NULL;
 		if (token->op == -1)
 			env_var(token);
 		if (token->quote_state != NO_QUOTE && token->op == -1)
-		{
 			quote_handling(token->str);
-		}
 		token = token->next;
 	}
 }
