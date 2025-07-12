@@ -109,3 +109,17 @@ t_glb 	*glb_list(void)
 
 	return (&glb);
 }
+void	here_doc(char *input)
+{
+	int	i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (is_operator(input + i) == LESS_LESS)
+		{
+			input = readline("> ");
+		}
+		i++;
+	}
+}

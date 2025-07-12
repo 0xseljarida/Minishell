@@ -135,7 +135,7 @@ char	is_quote(char c);
 /*EXPANDING*/
 char *check_env(char *str);
 char	*re_alloc(char *str, int start, int len, char  *env_value);
-
+void	here_doc(char *input);
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
 #endif

@@ -35,7 +35,9 @@ int	main(int ac, char **av, char **env)
 	while (1)
 	{
 		input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$ \033[0m");
+
 		//check_quo_error();
+		here_doc(input);
 		tokens = tokenizer(input);
 		expanding(tokens);
 		print_tokenizer(tokens);

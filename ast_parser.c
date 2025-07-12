@@ -21,8 +21,10 @@ t_ast *add_tree_node(void)
 void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 {
 	t_redirections	*rdc;
+	t_redirections	*head;
+
 	rdc = malloc(sizeof(t_redirections));
-	tree_node->rdc = rdc;
+	head = rdc;
 	while (cmd_line->str != NULL && cmd_line->op != PIPE)
 	{
 		if (cmd_line->op != -1 && cmd_line->op < PIPE)
@@ -32,7 +34,7 @@ void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 			rdc = rdc->next;
 			rdc = malloc(sizeof(t_redirections));	
 			rdc->type = cmd_line->op;
-			if (cmd_line->next != 0 && ft_isalpha(cmd_line->next->str[0]) != 0)
+			if (cmd_line->next != 0)
 				rdc->str = cmd_line->next->str;
 			// else
 			// {
@@ -40,8 +42,12 @@ void	handle_redirections(t_ast *tree_node, t_tokenizer *cmd_line)
 			// }
 			cmd_line = cmd_line->next;
 		}
-			cmd_line = cmd_line->next;
+		rdc = head ;
+		head = head->next;
+		free(rdc);
+		tree_node->rdc = head;
 	}
+
 }
 
 t_ast *fill_tree_node(t_tokenizer *cmd_line, t_ast *tree_node)
@@ -49,7 +55,7 @@ t_ast *fill_tree_node(t_tokenizer *cmd_line, t_ast *tree_node)
 	tree_node->type = CMD;
 	tree_node->cmd = cmd_line->str;
 	tree_node->cmd_line = cmd_line;
-	//handle_redirections(tree_node, cmd_line);
+	handle_redirections(tree_node, cmd_line);
 	return (tree_node);
 }
 

@@ -25,36 +25,14 @@ char *check_env(char *str)
 
 char *new_alloc(char *str, char *env_value, int start, int len)
 {
-	// int	i;
 	int		new_len;
-	// int		env_i;
 	char	*new_str;
 
 	new_len = ft_strlen(str) - len + ft_strlen(env_value);
 	new_str = malloc(new_len + 1);
-	// i = 0;
-	// while (i < start)
-	// {
-	// 	new_str[i] = str[i];
-	// 	i++;
-	// }
 	ft_strlcpy(new_str, str, start + 1);
 	ft_strlcat(new_str, env_value, new_len + 1);
 	ft_strlcat(new_str, str + start + len, new_len + 1);
-	// env_i = 0;
-	// while (env_i < ft_strlen(env_value))
-	// {
-	// 	new_str[i] = env_value[env_i];
-	// 	env_i++;
-	// 	i++;
-	// }
-	// while (str[start + len] != 0)
-	// {
-	// 	new_str[i] = str[start + len];
-	// 	start++;
-	// 	i++;
-	// }
-	// new_str[new_len] = 0;
 	return (new_str);
 }
 
