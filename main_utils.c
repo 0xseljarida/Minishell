@@ -18,7 +18,7 @@ void	print_tokenizer(t_tokenizer *tokens)
 		}
 		else
 		{
-			print_op(temp->op, temp->str);
+			print_op(temp->op);
 			if (temp->op == LESS_LESS)
 			{
 				tmp = temp->hd;
@@ -58,7 +58,7 @@ void	print_node(t_ast	*ast)
 	print_tokenizer(ast->cmd_line);
 }
 
-void	print_op(t_operator op, char *str)
+void	print_op(t_operator op)
 {
 	if (op == LESS_LESS)
 		printf("<<\n");

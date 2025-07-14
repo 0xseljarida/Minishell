@@ -113,7 +113,7 @@ void	print_env(t_env *env_list);
 void	print_node(t_ast	*ast);
 void	print_tree(t_ast	*ast);
 void	print_tokenizer(t_tokenizer *tokens);
-void	print_op(t_operator op, char *str);
+void	print_op(t_operator op);
 
 /* FREE_EXIT*/
 extern t_garbage_collector		*g_free;
@@ -136,4 +136,9 @@ char	*re_alloc(char *str, int start, int len, char  *env_value);
 t_here_doc	*here_doc(t_tokenizer *token);
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
+
+/* ERRORS */
+
+void	input_error(char *input);
+int		check_parsing_errors(t_tokenizer *token);
 #endif
