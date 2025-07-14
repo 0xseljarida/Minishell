@@ -25,14 +25,36 @@ void    free_all(char *input, t_tokenizer *tokens)
     //     g_free = g_free->next;
     //     free(tmp);
     // }
-	temp = tokens;
+    void        *tmp;
+    t_env       *env;
+
 	while (tokens != NULL)
 	{
-		if (tokens->str != NULL)	
-			free(tokens->str);
-		temp = tokens;
+        if (tokens->op == LESS_LESS)
+        {
+           while (tokens->hd != NULL)
+            {
+                free(tokens->hd->str);
+                tmp = tokens->hd; 
+                tokens->hd = tokens->hd->next;
+                free(tmp);
+            }
+        }
+		free(tokens->str);
+        temp = tokens;
 		tokens = tokens->next;
-		free(temp);	
+        free(temp);
+
 	}
     free(input);
+
+    env = glb_list()->env;
+    while (env != NULL)
+    {
+        free(env->name);
+        free(env->value);
+        tmp = env;
+        env = env->next;
+        free(tmp);
+    }
 }

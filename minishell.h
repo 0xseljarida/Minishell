@@ -46,14 +46,6 @@ typedef enum e_quote
 	THERES_QUOTE,
 }			t_quote;
 
-typedef struct s_expantion
-{
-	char	*value;
-	int		position_i;
-	int		start;
-	int		end;
-	struct s_expantion *next;
-}t_expantion;
 
 typedef struct s_here_doc
 {
@@ -68,11 +60,8 @@ typedef struct s_tokenizer
 	t_quote				quote_state;
 	t_operator			op;
 	t_here_doc			*hd;
-	t_expantion			*exp; // check_if_itexist
-
 	struct s_tokenizer	*next;
 }				t_tokenizer;
-
 
 typedef struct s_redirections
 {
@@ -117,6 +106,7 @@ typedef struct s_glb
 	t_redirections	*rdr;
 }t_glb;
 
+t_glb 	*glb_list(void);
 /* PRINT */
 t_glb	*glb_list(void);
 void	print_env(t_env *env_list);

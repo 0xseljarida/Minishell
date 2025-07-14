@@ -32,8 +32,8 @@ int	main(int ac, char **av, char **env)
 	//signal_handler();
 	glb_list()->env = save_env(env);
 	// print_env(glb_list()->env);
-	while (1)
-	{
+	// while (1)
+	// {
 		input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell@damn:$ \033[0m");
 
 		//check_quo_error();
@@ -48,6 +48,6 @@ int	main(int ac, char **av, char **env)
 		// print_node(ast->left);
 		// printf("this is the left \n");
 		// print_node(ast->left);
-		// free_all(input, tokens);
-	}
+		free_all(input, tokens);
+	// }
 }

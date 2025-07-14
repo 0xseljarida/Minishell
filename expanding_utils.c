@@ -79,5 +79,6 @@ t_here_doc	*here_doc(t_tokenizer *token)
 		hd = hd->next;
 		hd->str = readline("> ");
 	}
+	hd->next = NULL;
 	return (head);
 }

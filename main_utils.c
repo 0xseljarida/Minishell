@@ -4,7 +4,7 @@ void	print_tokenizer(t_tokenizer *tokens)
 {
 	int i = 0;
 	t_tokenizer	*temp;
-
+	t_here_doc	*tmp;
 	temp = tokens;
 	printf("_____________________\n");
 	while (temp != NULL)
@@ -14,15 +14,27 @@ void	print_tokenizer(t_tokenizer *tokens)
 		{
 			printf("cmd   : %s = %zu\n",temp->str, ft_strlen(temp->str));
 			printf("quote : %d\n",temp->quote_state);
+
 		}
 		else
+		{
 			print_op(temp->op, temp->str);
+			if (temp->op == LESS_LESS)
+			{
+				tmp = temp->hd;
+				printf("\n************HERE IS THE HEREDOC**************\n");
+				while (tmp != 0)
+				{
+					printf("%s \n", tmp->str);
+					tmp = tmp->next;
+				}
+			}
+		}
 		temp = temp->next;
 		i++;
 		printf("----------------\n");
 	}
 }
-
 void	print_tree(t_ast	*ast)
 {
 	while (ast != NULL)
@@ -86,9 +98,11 @@ t_env	*save_env(char **env)
 		i++;
 		if (env[i] != NULL)
 			env_list->next = malloc(sizeof(t_env));
+		else
+			break;
 		env_list = env_list->next;
 	}
-	env_list = NULL;
+	env_list->next = NULL;
 	return (env_head);
 }
 
