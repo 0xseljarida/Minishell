@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	remove_empty_quote(char *str, int start, int end, char q)
+void	remove_empty_quote(char *str, int start, int end)
 {
 	int	i;
 
@@ -36,7 +36,7 @@ int	quote_handling(char *str)
 			i++;
 			while (q != is_quote(str[i]))
 				i++;
-			remove_empty_quote(str, start, i, q);
+			remove_empty_quote(str, start, i);
 			i -= 2;
 		}
 		i++;
@@ -97,7 +97,7 @@ void	expanding(t_tokenizer *token)
 			token->hd = NULL;
 		if (token->op == NOT_OP)
 			env_var(token);
-		if (token->quote_state != NO_QUOTE && token->op == NOT_OP)
+		if (token->op == NOT_OP)
 			quote_handling(token->str);
 		token = token->next;
 	}

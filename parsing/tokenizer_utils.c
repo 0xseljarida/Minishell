@@ -44,17 +44,14 @@ void	fill_the_node_op(t_tokenizer *node, int op, int i)
 	node->i = i;
 	node->op = op;
 	node->str = NULL;
-	node->quote_state = THERES_QUOTE;
 	node->next = NULL;
 }
 
-void	fill_the_node_str(t_tokenizer *node, int i, char *token,
-		t_quote quote_state)
+void	fill_the_node_str(t_tokenizer *node, int i, char *token)
 {
 	node->i = i;
 	node->op = NOT_OP;
 	node->str = token;
-	node->quote_state = quote_state;
 	node->next = NULL;
 }
 

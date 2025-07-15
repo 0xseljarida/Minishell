@@ -48,7 +48,7 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int *node_i)
 		return (*i);
 	*node = add_node(&((*node)->next));
 	to_alloc = ft_substr(input, *i, end);
-	fill_the_node_str(*node, *node_i, to_alloc, NOT_OP);
+	fill_the_node_str(*node, *node_i, to_alloc);
 	*i = *i + end;
 	*node_i += 1;
 	return (*i);

@@ -127,7 +127,7 @@ t_env 	*save_env(char **env); // already exist in main , could delete this line
 
 int		is_operator(char *str);
 char	*alloc_quote_help(char *str, int *i);
-void	fill_the_node_str(t_tokenizer *node, int i, char *token, t_quote quote_state);
+void	fill_the_node_str(t_tokenizer *node, int i, char *token);
 void	fill_the_node_op(t_tokenizer *node, int op, int i);
 t_tokenizer *tokenizer(char *input);
 void expanding(t_tokenizer *token);
