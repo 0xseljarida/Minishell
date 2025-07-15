@@ -89,7 +89,7 @@ int main(int ac, char **av, char **env) {
 			}
 		}
 	free_args(args);
-	free_all(input, tokens);
+	free_tokens(input, tokens);
   }
 }
    // t_ast		*ast;
