@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "minishell.h"
 
 
 static void extract_and_push(t_env **env_list, char *env_var)

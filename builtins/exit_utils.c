@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "minishell.h"
 
 static int  overflow_check(long long num, int sign, int digit)
 {

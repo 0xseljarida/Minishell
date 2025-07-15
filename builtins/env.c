@@ -1,5 +1,4 @@
-#include "../minishell.h"
-
+#include "minishell.h"
 
 static void print_env_var(t_env *env)
 {

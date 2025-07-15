@@ -1,5 +1,4 @@
-#include "../minishell.h"
-
+#include "minishell.h"
 
 static int check_n_flag(char *str)
 {

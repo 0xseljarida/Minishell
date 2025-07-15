@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "minishell.h"
 
 static char *get_env_value_or_default(t_env *env_list, const char *name, const char *default_val)
 {

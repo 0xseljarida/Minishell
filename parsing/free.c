@@ -27,17 +27,16 @@ void	free_tokens(char *input, t_tokenizer *tokens)
 	free(input);
 }
 
-void	free_env(t_env *env)
-{
-	void	*tmp;
+// void	free_env(t_env *env)
+// {
+// 	void	*tmp;
 
-	env = glb_list()->env;
-	while (env != NULL)
-	{
-		free(env->name);
-		free(env->value);
-		tmp = env;
-		env = env->next;
-		free(tmp);
-	}
-}
+// 	while (env != NULL)
+// 	{
+// 		free(env->name);
+// 		free(env->value);
+// 		tmp = env;
+// 		env = env->next;
+// 		free(tmp);
+// 	}
+// }

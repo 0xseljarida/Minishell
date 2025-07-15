@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "minishell.h"
 
 char	*str_concat_three(const char *a, const char *b, const char *c)
 {
