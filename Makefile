@@ -1,13 +1,14 @@
-SRC = main.c free_all.c tokenizer.c tokenizer_utils.c ast_parser.c parser_utils.c\
- expanding.c main_utils.c expanding_utils.c check_errors.c
+SRC = main.c parsing/free.c parsing/tokenizer.c parsing/tokenizer_utils.c parsing/ast_parser.c parsing/parser_utils.c\
+ parsing/expanding.c parsing/print_helper.c parsing/expanding_utils.c parsing/check_errors.c
+ builtins/cd.c builtins/echo.c builtins/env.c exec/exec_builtins.c builtins/exit.c builtins/exit_utils.c builtins/export.c builtins/pwd.c\
+ builtins/unset.c env_var/env_init.c env_var/env_update.c env_var/env_utils.c env_var/env_utils1.c exec/args_utils.c  exec/exec_command.c
 
 NAME = minishell
-HEADER = minishell.h
+HEADER = includes/minishell.h
 OBJ = ${SRC:.c=.o}
 
-CC = cc
-
-CFLAGS = -Wall -Wall -Werror 
+CC = cc 
+CFLAGS = -Wall -Wall -Werror -Iincludes -fsanitize=address
 
 LIB_DIR = libft
 LIB_FILE = libft.a
@@ -18,7 +19,7 @@ RM = rm -f
 all: ${NAME}
 
 ${NAME}: ${OBJ} ${HEADER} ${LIB}
-	${CC} ${OBJ} ${LIB} -lreadline -o ${NAME}
+	${CC} $(CFLAGS) ${OBJ} ${LIB} -lreadline -o ${NAME}
 
 $(LIB):
 	$(MAKE) -C $(LIB_DIR)

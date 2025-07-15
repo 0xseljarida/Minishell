@@ -37,3 +37,11 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	ptr[i] = '\0';
 	return (ptr);
 }
+
+int	ft_isspace(char c)
+{
+	if (c == ' ' || c == '\n' || c == '\v' || c == '\f' || c == ' '
+		|| c == '\r')
+		return (1);
+	return (0);
+}
