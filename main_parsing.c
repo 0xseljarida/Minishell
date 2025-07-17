@@ -47,7 +47,8 @@ int	main(int ac, char **av, char **env)
 		tokens = tokenizer(input);
 		if (check_parsing_errors(tokens))
 			return (1);
-		expanding(tokens);
+		expanding(&tokens);
+		printf("this is the main tokenizer :");
 		print_tokenizer(tokens);
 		free_tokens(input, tokens);
 		break;

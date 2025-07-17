@@ -63,42 +63,50 @@ int	valid_expanding(char *str, int *len)
 	return (1);
 }
 
-void	env_var(t_tokenizer *token)
+t_tokenizer	**env_var(t_tokenizer **token)
 {
 	int			i;
 	char		*env_value;
 	int			len;
 
 	i = 0;
-	while (token->str[i] != 0)
+	while ((*token)->str[i] != 0)
 	{
-		if (token->str[i] == '\'')
+		if ((*token)->str[i] == '\'')
 		{
 			i++;
-			while (token->str[i] != '\'')
+			while ((*token)->str[i] != '\'')
 				i++;
 		}
-		if (token->str[i] == '$' && valid_expanding(token->str + i, &len))
+		if ((*token)->str[i] == '$' && valid_expanding((*token)->str + i, &len))
 		{
-			env_value = check_env(ft_substr(token->str, i + 1, len - 1));
-			token->str = re_alloc(token->str, i, len, env_value);
+			env_value = check_env(ft_substr((*token)->str, i + 1, len - 1));
+			(*token)->str = re_alloc((*token)->str, i, len, env_value);
 		}
 		i++;
 	}
+	if (to_retokenize(token) == 1)
+		tokenize_the_envar(token);
+	return (token);
 }
 
-void	expanding(t_tokenizer *token)
+void	expanding(t_tokenizer **token)
 {
-	while (token != NULL)
+	t_tokenizer	**temp;
+
+	temp = token;
+	while ((*temp) != NULL)
 	{
-		if (token->op == LESS_LESS)
-			token->hd = here_doc(token);
+		if ((*temp)->op == LESS_LESS)
+			(*temp)->hd = here_doc((*temp));
 		else
-			token->hd = NULL;
-		if (token->op == NOT_OP)
-			env_var(token);
-		if (token->op == NOT_OP)
-			quote_handling(token->str);
-		token = token->next;
+			(*temp)->hd = NULL;
+		if ((*temp)->op == NOT_OP)
+			temp = env_var(temp);
+		if ((*temp)->op == NOT_OP && (*temp)->env_case != ENV_CASE)
+			quote_handling((*temp)->str);
+		if ((*temp) == NULL)
+			break;
+		temp = &(*temp)->next;
 	}
 }

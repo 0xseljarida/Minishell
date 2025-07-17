@@ -68,9 +68,23 @@ t_here_doc	*here_doc(t_tokenizer *token)
 	return (head);
 }
 
-t_glb	*glb_list(void)
+void	tokenize_the_envar(t_tokenizer **token)
 {
-	static t_glb	glb;
+	t_tokenizer	**token_temp;
+	char		*str;
+	t_tokenizer	**token_next;
+	t_tokenizer *token_dele;
 
-	return (&glb);
+	token_dele = *token;
+	str = (*token)->str;
+	token_next = &(*token)->next;
+	*token = tokenizer_for_expanding((*token)->str);
+	free(str);
+	free(token_dele);
+	token_temp = token;
+	while ((*token_temp) != NULL)
+	{
+		token_temp = &(*token_temp)->next;
+	}
+	*token_temp = *token_next;
 }

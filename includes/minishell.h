@@ -35,6 +35,7 @@ typedef enum e_operator
 	WILDCARD,
 	NEXT,
 	NOT_OP,
+	ENV_CASE,
 }				t_operator;
 
 typedef enum e_quote
@@ -60,6 +61,7 @@ typedef struct s_tokenizer
 	char				*str;
 	t_quote				quote_state;
 	t_operator			op;
+	t_operator			env_case;
 	t_here_doc			*hd;
 	struct s_tokenizer	*next;
 }				t_tokenizer;
@@ -130,14 +132,17 @@ char	*alloc_quote_help(char *str, int *i);
 void	fill_the_node_str(t_tokenizer *node, int i, char *token);
 void	fill_the_node_op(t_tokenizer *node, int op, int i);
 t_tokenizer *tokenizer(char *input);
-void expanding(t_tokenizer *token);
+void 	expanding(t_tokenizer **token);
 char	is_quote(char c);
 
 /*EXPANDING*/
-char *check_env(char *str);
-char	*re_alloc(char *str, int start, int len, char  *env_value);
+char		*check_env(char *str);
+char		*re_alloc(char *str, int start, int len, char  *env_value);
 t_here_doc	*here_doc(t_tokenizer *token);
 
+t_tokenizer	*tokenizer_for_expanding(char *input);
+void	tokenize_the_envar(t_tokenizer **token);
+int		to_retokenize(t_tokenizer **token);
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
 
@@ -146,36 +151,35 @@ t_ast	*ast_builder(t_tokenizer *token);
 int		input_error(char *input);
 int		check_parsing_errors(t_tokenizer *token);
 
-
 /*BUILTINS*/
 
-void pwd(int *exit_status);
-void echo(char **args, int *exit_status);
+void 	pwd(int *exit_status);
+void 	echo(char **args, int *exit_status);
 void	ft_exit(char **args);
 void	builtin_unset(char **args, t_env **env_list);
-void ft_exit(char **args);
+void 	ft_exit(char **args);
 long long my_ft_atoll(const char *str, int *overflow);
-int ft_env(char **args, t_env *env_list);
-int ft_cd(char **args, t_env **env_list);
-int ft_export(char **args, t_env **env_list);
-int is_builtin(const char *cmd);
-int execute_builtin(char **args, t_env **env_list, int *exit_status);
-char **tokens_to_args(t_tokenizer *tokens);
-void free_args(char **args);
-int execute_command(char **args, t_env **env);
+int 	ft_env(char **args, t_env *env_list);
+int 	ft_cd(char **args, t_env **env_list);
+int 	ft_export(char **args, t_env **env_list);
+int 	is_builtin(const char *cmd);
+int 	execute_builtin(char **args, t_env **env_list, int *exit_status);
+char	**tokens_to_args(t_tokenizer *tokens);
+void	free_args(char **args);
+int		execute_command(char **args, t_env **env);
 char	*str_concat_three(const char *a, const char *b, const char *c);
-void free_strs(char **strs);
-char *get_cmd_path(char *cmd, t_env *env_list);
+void	free_strs(char **strs);
+char	*get_cmd_path(char *cmd, t_env *env_list);
 /*ENVIRONMENT VARIABLES*/
-int ft_strcmp(const char *s1, const char *s2);
-void init_env_var(t_env **env_list, char **envp);
-t_env *create_env_node(char *name, char *value);
-void insert_env_node(t_env **env_list, t_env *new_node);
-char *get_env_value(char *name, t_env *env);
-void free_env(t_env *env);
-int update_env_var(t_env *env_list, t_env *new_node);
-void update_shell_lvl(t_env **env_list);
-char **envp_to_env_vector(t_env *env_list);
+int		ft_strcmp(const char *s1, const char *s2);
+void	init_env_var(t_env **env_list, char **envp);
+t_env	*create_env_node(char *name, char *value);
+void	insert_env_node(t_env **env_list, t_env *new_node);
+char	*get_env_value(char *name, t_env *env);
+void	free_env(t_env *env);
+int		update_env_var(t_env *env_list, t_env *new_node);
+void	update_shell_lvl(t_env **env_list);
+char	**envp_to_env_vector(t_env *env_list);
 char	**envlist_to_array(t_env *env_list);
 
 #endif
