@@ -4,17 +4,19 @@ int	input_error(char *input)
 {
 	int	i;
 	int	error;
+	char	c;
 
 	i = 0;
 	while (input[i])
 	{
 		error = 1;
-		if (is_quote(input[i]))
+		c = input[i]; 
+		if (is_quote(c))
 		{
 			i++;
-			while (input[i] && !is_quote(input[i]))
+			while (input[i] && input[i] != c)
 				i++;
-			if (is_quote(input[i]))
+			if (c == input[i])
 				error = 0;
 			if (error == 1)
 			{

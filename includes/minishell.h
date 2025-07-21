@@ -55,13 +55,22 @@ typedef struct s_here_doc
 	struct s_here_doc	*next;
 }t_here_doc;
 
+typedef struct	s_env_list 
+{
+	char				*str;
+	int					i;
+	struct s_env_list	*next;
+}				t_env_list;
+
 typedef struct s_tokenizer
 {
 	int					i;
+	int					*quotes_index;
 	char				*str;
 	t_quote				quote_state;
 	t_operator			op;
 	t_operator			env_case;
+	t_env_list			*env_list;
 	t_here_doc			*hd;
 	struct s_tokenizer	*next;
 }				t_tokenizer;
@@ -71,6 +80,7 @@ typedef struct s_redirections
 	t_operator		type;
 	char			*str;
 	int				file_fd;
+	t_quote			qt;
 	struct s_redirections	*next;
 	
 }			t_redirections;
@@ -107,6 +117,7 @@ typedef struct s_glb
 	t_env			*env;
 	t_tokenizer		*tokens;
 	t_redirections	*rdr;
+	int				*quotes_index;
 }t_glb;
 
 
@@ -137,12 +148,13 @@ char	is_quote(char c);
 
 /*EXPANDING*/
 char		*check_env(char *str);
-char		*re_alloc(char *str, int start, int len, char  *env_value);
+char		*re_alloc(char *str, int *start, int len, char  *env_value);
 t_here_doc	*here_doc(t_tokenizer *token);
-
+void		expand_nq(t_tokenizer **token, int *i);
 t_tokenizer	*tokenizer_for_expanding(char *input);
-void	tokenize_the_envar(t_tokenizer **token);
-int		to_retokenize(t_tokenizer **token);
+void		tokenize_the_envar(t_tokenizer **token);
+int			to_retokenize(t_tokenizer **token);
+void		save_index(t_tokenizer *token);
 /* AST_ PASRER */
 t_ast	*ast_builder(t_tokenizer *token);
 
@@ -150,7 +162,6 @@ t_ast	*ast_builder(t_tokenizer *token);
 
 int		input_error(char *input);
 int		check_parsing_errors(t_tokenizer *token);
-
 /*BUILTINS*/
 
 void 	pwd(int *exit_status);

@@ -51,7 +51,6 @@ int	main(int ac, char **av, char **env)
 		printf("this is the main tokenizer :");
 		print_tokenizer(tokens);
 		free_tokens(input, tokens);
-		break;
 	}
 	free_env(glb_list()->env);
 }

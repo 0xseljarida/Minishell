@@ -18,30 +18,34 @@ char	*check_env(char *str)
 	return (NULL);
 }
 
-char	*new_alloc(char *str, char *env_value, int start, int len)
+char	*new_alloc(char *str, char *env_value, int *start, int len)
 {
 	int		new_len;
 	char	*new_str;
+	int 	new_start;
 
 	new_len = ft_strlen(str) - len + ft_strlen(env_value);
 	new_str = malloc(new_len + 1);
-	ft_strlcpy(new_str, str, start + 1);
+	ft_strlcpy(new_str, str, *start + 1);
 	ft_strlcat(new_str, env_value, new_len + 1);
-	ft_strlcat(new_str, str + start + len, new_len + 1);
+	new_start = ft_strlen(new_str);
+	ft_strlcat(new_str, str + *start + len, new_len + 1);
+	*start = new_start - 1;
 	return (new_str);
 }
 
-char	*re_alloc(char *str, int start, int len, char *env_value)
+char	*re_alloc(char *str, int *start, int len, char *env_value)
 {
 	char	*new_str;
 
 	if (env_value == NULL)
 	{
-		ft_strlcpy(str + start, str + start + len, ft_strlen(str) - len + 1);
+		ft_strlcpy(str + *start, str + *start + len, ft_strlen(str) - len + 1);
 		return (str);
 	}
 	new_str = new_alloc(str, env_value, start, len);
 	free(str);
+	// exit(1);
 	return (new_str);
 }
 

@@ -40,8 +40,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 int	ft_isspace(char c)
 {
-	if (c == ' ' || c == '\n' || c == '\v' || c == '\f' || c == ' '
-		|| c == '\r')
+	if (c == '\n' || c == '\v' || c == '\f' || c == ' '
+		|| c == '\r' || c == '\t')
 		return (1);
 	return (0);
 }
