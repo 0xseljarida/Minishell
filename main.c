@@ -44,7 +44,7 @@ int main(int ac, char **av, char **env) {
     }
     // check_quo_error();
     tokens = tokenizer(input);
-    expanding(tokens);
+    expanding(&tokens);
     print_tokenizer(tokens);
 
 	args = tokens_to_args(tokens);
