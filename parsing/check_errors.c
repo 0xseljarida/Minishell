@@ -19,8 +19,8 @@ int	input_error(char *input)
 			if (c == input[i])
 				error = 0;
 			if (error == 1)
-			{
-				printf("error : no such thing \n");
+			{	
+				printf("minishell: Unexpected token\n");
 				return (1);
 			}
 		}

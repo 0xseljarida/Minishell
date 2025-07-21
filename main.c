@@ -20,7 +20,8 @@ t_garbage_collector *g_free;
 // 	}
 // }
 
-int main(int ac, char **av, char **env) {
+int main(int ac, char **av, char **env)
+{
 
     t_tokenizer *tokens;
     char *input;
@@ -37,7 +38,8 @@ int main(int ac, char **av, char **env) {
 
   while (1) {
     input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell $> \033[0m");
-
+	if (input_error(input) == 1)
+		break;
     if (!input) {
       printf("exit\n");
       exit(0); // ou free et exit proprement si nécessaire
@@ -45,6 +47,8 @@ int main(int ac, char **av, char **env) {
     // check_quo_error();
     tokens = tokenizer(input);
     expanding(&tokens);
+	if (input_error(input) == 1)
+		break;
     print_tokenizer(tokens);
 
 	args = tokens_to_args(tokens);
@@ -90,8 +94,8 @@ int main(int ac, char **av, char **env) {
 		}
 //	print_env(glb_list()->env);
 	free_args(args);
-	free_tokens(input, tokens);
   }
+	free_tokens(input, tokens);
 }
    // t_ast		*ast;
     // ast = ast_builder(tokens);

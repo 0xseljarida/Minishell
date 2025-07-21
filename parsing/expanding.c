@@ -73,11 +73,6 @@ int	quote_handling(t_tokenizer *token)
 t_tokenizer	**env_var(t_tokenizer **token)
 {
 	int			i;
-	// int			index;
-	// t_env_list	*env_token_list;
-
-	// env_token_list = NULL;
-	// index = 0;
 
 	i = 0;
 	while ((*token)->str[i] != 0)
@@ -92,9 +87,7 @@ t_tokenizer	**env_var(t_tokenizer **token)
 		{
 			i++;
 			while ((*token)->str[i] != '\"')
-			{
 				i++;
-			}
 		}
 		expand_nq(token, &i);
 		i++;
