@@ -108,18 +108,13 @@ void	expand_nq(t_tokenizer **token, int *i)
 {
 	char	*env_value;
 	int			len;
-	// char	*fixed_env_value;
 
 	if ((*token)->str[*i] == '$')
 	{
-		// index++;
 		if (valid_expanding((*token)->str + *i, &len))
 		{
 			env_value = check_env(ft_substr((*token)->str, *i + 1, len - 1));
-			// fixed_env_value	= word_splitting(env_value);
-			// add_env_token_list(env_token_list, env_value, i);
 			(*token)->str = re_alloc((*token)->str, i, len, env_value);
-			// free(fixed_env_value);
 		}
 	}
 }
