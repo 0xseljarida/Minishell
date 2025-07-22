@@ -40,7 +40,7 @@ int	check_parsing_errors(t_tokenizer *token)
 				printf("Minishell: syntax error near unexpected token `|\'\n");
 			else
 				printf
-				("Minishell: syntax error near unexpectedtoken \'newline\'");
+				("Minishell: syntax error near unexpectedtoken \'newline\'\n");
 			return (1);
 		}
 		token = token->next;

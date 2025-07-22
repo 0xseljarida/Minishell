@@ -14,7 +14,9 @@ void	print_tokenizer(t_tokenizer *tokens)
 			printf("token   : %s = %zu\n\n\n",temp->str, ft_strlen(temp->str));
 		else
 		{
+			printf("OP      : ");
 			print_op(temp->op);
+			printf("\n");
 			if (temp->op == LESS_LESS)
 			{
 				tmp = temp->hd;

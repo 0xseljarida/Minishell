@@ -35,9 +35,9 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int *node_i)
 	end = 0;
 	while (input[*i + end] != '\0' && !ft_isspace(input[*i + end]))
 	{
-		if ((*i == 0 || ft_isspace(input[*i - 1])) && is_quote(input[*i])
-			&& is_quote(input[*i]) == is_quote(input[*i + 1]))
-			return (*i + 1);
+		// if ((*i == 0 || ft_isspace(input[*i - 1])) && is_quote(input[*i])
+		// 	&& is_quote(input[*i]) == is_quote(input[*i + 1]))
+		// 	return (*i + 1);
 		if (alloc_quote(input + *i, &end) == 1)
 			end--;
 		end++;

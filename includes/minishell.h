@@ -68,7 +68,6 @@ typedef struct s_redirections
 	char			*str;
 	int				file_fd;
 	t_quote			qt;
-	struct s_redirections	*next;
 	
 }			t_redirections;
 
@@ -82,7 +81,7 @@ typedef struct s_tokenizer
 	t_operator			env_case;
 	t_env_list			*env_list;
 	t_here_doc			*hd;
-	t_redirections		*redirect;
+	t_redirections		redirect;
 	struct s_tokenizer	*next;
 }				t_tokenizer;
 

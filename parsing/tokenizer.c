@@ -40,9 +40,9 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int *node_i)
 		&& (is_operator(input + *i + end) == NOT_OP
 			|| is_quote(input[*i + end])))
 	{
-		if ((*i == 0 || ft_isspace(input[*i - 1])) && is_quote(input[*i])
-			&& is_quote(input[*i]) == is_quote(input[*i + 1]))
-			return (*i + 1);
+		// if ((*i == 0 || ft_isspace(input[*i - 1])) && is_quote(input[*i])
+		// 	&& is_quote(input[*i]) == is_quote(input[*i + 1]))
+		// 	return (*i + 1);
 		if (alloc_quote(input + *i, &end) == 1)
 			end--;
 		end++;
@@ -57,16 +57,19 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int *node_i)
 	return (*i);
 }
 
-static int	alloc_operator(int	*i, char *input, t_tokenizer **node
+static int	alloc_operator(int	*i, char *input, t_tokenizer **token
 	, int *node_i)
 {
+	t_operator	op;
+
 	if (!input[*i])
 		return (*i);
-	if (is_operator(input + *i) < QUOTE)
+	op = is_operator(input + *i);
+	if (op < QUOTE)
 	{
-		*node = add_node(&((*node)->next));
-		fill_the_node_op(*node, is_operator(input + *i), *node_i);
-		if (is_operator(input + *i) < LESS)
+		*token = add_node(&((*token)->next));
+		fill_the_node_op(*token, op, *node_i);
+		if (op < LESS)
 			*i += 1;
 		*node_i += 1;
 	}

@@ -1,25 +1,30 @@
 #include "minishell.h"
 
-t_garbage_collector *g_free;
+void	redirection_infos(t_tokenizer *token)
+{
+	t_operator	op;
 
-// char	*handle_input(char *input)
-// {
-// 	int	i;
-// 	int	len;
-
-// 	len = ft_strlen(input);
-// 	i = 0;
-// 	while (i )
-// 	if (input[i] == '\'' && input[i + 1] == '\'' ||
-// 		input[i] == '\"' && input[i + 1] == '\"')
-// 	{
-// 		while(i < len)
-// 		{
-
-// 		}
-// 	}
-// }
-
+	while (token != NULL)
+	{
+		op = token->op;
+		if (op == GREAT)
+		{
+			token = token->next;
+			token->redirect.file_fd = open(token->str, O_CREAT | O_RDONLY);
+		}
+		else if (op == LESS)
+		{
+			token = token->next;
+			token->redirect.file_fd = open(token->str, O_CREAT | O_WRONLY);
+		}
+		else if (op == LESS_LESS)
+		{
+			token = token->next;
+			token->redirect.file_fd = open(token->str, O_CREAT | O_APPEND);
+		}
+		token = token->next;
+	}
+}
 int main(int ac, char **av, char **env)
 {
 
@@ -48,11 +53,11 @@ int main(int ac, char **av, char **env)
 		break;
     tokens = tokenizer(input);		
 	if (check_parsing_errors(tokens))
-		return (1);
+		continue;
     expanding(&tokens);
+	redirection_infos(tokens);	
 	//error
     print_tokenizer(tokens);
-
 	args = tokens_to_args(tokens);
 	if (args && args[0])
 	{
@@ -99,13 +104,3 @@ int main(int ac, char **av, char **env)
   }
 	free_tokens(input, tokens);
 }
-   // t_ast		*ast;
-    // ast = ast_builder(tokens);
-    // printf("________________NO_THE_TREE_________________");
-    // print_node(ast);
-    // printf("this is the right \n");
-    // print_node(ast->left);
-    // printf("this is the left \n");
-    // print_node(ast->left);
-    // free_all(input, tokens);
-
