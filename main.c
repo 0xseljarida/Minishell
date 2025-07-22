@@ -44,11 +44,13 @@ int main(int ac, char **av, char **env)
       printf("exit\n");
       exit(0); // ou free et exit proprement si nécessaire
     }
-    // check_quo_error();
-    tokens = tokenizer(input);
-    expanding(&tokens);
 	if (input_error(input) == 1)
 		break;
+    tokens = tokenizer(input);		
+	if (check_parsing_errors(tokens))
+		return (1);
+    expanding(&tokens);
+	//error
     print_tokenizer(tokens);
 
 	args = tokens_to_args(tokens);

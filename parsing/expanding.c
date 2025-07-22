@@ -51,42 +51,19 @@ int	quote_handling(t_tokenizer *token)
 	return (0);
 }
 
-/*for other $? $!...*/
-
-
-/* TO REMOVE */
-// void	add_env_token_list(t_env_list *env_token_list, char *env_value, int i)
-// {
-// 	t_env_list	*temp;
-
-// 	temp = env_token_list;
-// 	while(temp != NULL)
-// 		temp = temp->next;
-// 	temp = malloc(sizeof(t_env_list));
-// 	temp->str = env_value;
-// 	temp->i = i;
-// 	temp->next = NULL;
-// }
-
-
-
 t_tokenizer	**env_var(t_tokenizer **token)
 {
 	int			i;
+	char		c;
 
 	i = 0;
 	while ((*token)->str[i] != 0)
 	{
-		if ((*token)->str[i] == '\'')
+		c = (*token)->str[i];
+		if (is_quote((*token)->str[i]))
 		{
 			i++;
-			while ((*token)->str[i] != '\'')
-				i++;
-		}
-		if ((*token)->str[i] == '\"')
-		{
-			i++;
-			while ((*token)->str[i] != '\"')
+			while ((*token)->str[i] != c)
 				i++;
 		}
 		expand_nq(token, &i);

@@ -1,37 +1,22 @@
 #include "minishell.h"
 
-void	skip_the_char(char *str, int i)
-{
-	if (str[i] == '\'')
-	{
-		i++;
-		while (str[i] != '\'')
-			i++;
-	}
-}
-
 static int	*count_quotes(char *str)
 {
-	int	i;
-	int	count;
-	int	*quote_array;
+	int		i;
+	int		count;
+	int		*quote_array;
+	char	c;
 
 	i = 0;
 	count = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')
+		c = str[i];
+		if (is_quote(str[i]))
 		{
 			count++;
 			i++;
-			while (str[i] != '\'')
-				i++;
-		}
-		if (str[i] == '\"')
-		{
-			count++;
-			i++;
-			while (str[i] != '\"')
+			while (str[i] != c)
 				i++;
 		}
 		i++; 
@@ -59,8 +44,6 @@ int	valid_expanding(char *str, int *len)
 	*len = i;
 	return (1);
 }
-
-
 
 // static char	*word_splitting(char *env_value)
 // {

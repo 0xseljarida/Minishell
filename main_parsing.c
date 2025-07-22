@@ -1,37 +1,36 @@
 #include "minishell.h"
 
 /*This function save the env variables in a varibale (act as global var) glb_list()->env */
-t_env	*save_env(char **env)
-{
-	t_env	*env_list;
-	t_env	*env_head;
-	int		i;
-	int		j;
+// t_env	*save_env(char **env)
+// {
+// 	t_env	*env_list;
+// 	t_env	*env_head;
+// 	int		i;
+// 	int		j;
 
-	i = 0;
-	env_head = malloc(sizeof(t_env));
-	env_list = env_head;
-	while (env[i] != 0)	
-	{
-		j = 0;
-		while (env[i][j] != '=')
-			j++;
-		env_list->name = ft_substr(env[i], 0, j);
-		env_list->value = ft_substr(env[i], j + 1, ft_strlen(env[i]));
-		i++;
-		if (env[i] != NULL)
-			env_list->next = malloc(sizeof(t_env));
-		else
-			break;
-		env_list = env_list->next;
-	}
-	env_list->next = NULL;
-	return (env_head);
-}
+// 	i = 0;
+// 	env_head = malloc(sizeof(t_env));
+// 	env_list = env_head;
+// 	while (env[i] != 0)	
+// 	{
+// 		j = 0;
+// 		while (env[i][j] != '=')
+// 			j++;
+// 		env_list->name = ft_substr(env[i], 0, j);
+// 		env_list->value = ft_substr(env[i], j + 1, ft_strlen(env[i]));
+// 		i++;
+// 		if (env[i] != NULL)
+// 			env_list->next = malloc(sizeof(t_env));
+// 		else
+// 			break;
+// 		env_list = env_list->next;
+// 	}
+// 	env_list->next = NULL;
+// 	return (env_head);
+// }
 
 int	main(int ac, char **av, char **env)
 {
-
 	t_tokenizer *tokens;
 	char		*input;
 

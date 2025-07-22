@@ -62,6 +62,16 @@ typedef struct	s_env_list
 	struct s_env_list	*next;
 }				t_env_list;
 
+typedef struct s_redirections
+{
+	t_operator		type;
+	char			*str;
+	int				file_fd;
+	t_quote			qt;
+	struct s_redirections	*next;
+	
+}			t_redirections;
+
 typedef struct s_tokenizer
 {
 	int					i;
@@ -72,18 +82,9 @@ typedef struct s_tokenizer
 	t_operator			env_case;
 	t_env_list			*env_list;
 	t_here_doc			*hd;
+	t_redirections		*redirect;
 	struct s_tokenizer	*next;
 }				t_tokenizer;
-
-typedef struct s_redirections
-{
-	t_operator		type;
-	char			*str;
-	int				file_fd;
-	t_quote			qt;
-	struct s_redirections	*next;
-	
-}			t_redirections;
 
 typedef struct s_ast
 {
@@ -117,7 +118,7 @@ typedef struct s_glb
 	t_env			*env;
 	t_tokenizer		*tokens;
 	t_redirections	*rdr;
-	int				*quotes_index;
+
 }t_glb;
 
 
