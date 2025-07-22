@@ -22,7 +22,7 @@ char	*new_alloc(char *str, char *env_value, int *start, int len)
 {
 	int		new_len;
 	char	*new_str;
-	int 	new_start;
+	int		new_start;
 
 	new_len = ft_strlen(str) - len + ft_strlen(env_value);
 	new_str = malloc(new_len + 1);
@@ -46,7 +46,6 @@ char	*re_alloc(char *str, int *start, int len, char *env_value)
 	}
 	new_str = new_alloc(str, env_value, start, len);
 	free(str);
-	// exit(1);
 	return (new_str);
 }
 
@@ -78,7 +77,7 @@ void	tokenize_the_envar(t_tokenizer **token)
 	t_tokenizer	**token_temp;
 	char		*str;
 	t_tokenizer	**token_next;
-	t_tokenizer *token_dele;
+	t_tokenizer	*token_dele;
 
 	token_dele = *token;
 	str = (*token)->str;

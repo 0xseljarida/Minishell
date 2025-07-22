@@ -32,20 +32,18 @@ int	quote_handling(t_tokenizer *token)
 	while (token->str[i] != 0)
 	{
 		q = is_quote(token->str[i]);
-		if (q != 0 && i == (token->quotes_index[j] - j/2))
+		if (q != 0 && i == (token->quotes_index[j] - (j / 2)))
 		{
-			// printf("glb_list : %d\n", (glb_list()->quotes_index[j] - j/2));
-			// printf("glb_list the second : %d\n", (glb_list()->quotes_index[j] - j/2));
 			start = i;
 			i++;
 			j++;
-			while (q != is_quote(token->str[i]) || i != (token->quotes_index[j] - j/2))
+			while (q != is_quote(token->str[i])
+				|| i != (token->quotes_index[j] - j / 2))
 				i++;
 			remove_quote(token->str, start, i);
 			j++;
 			i -= 2;
 		}
-
 		i++;
 	}
 	return (0);
@@ -90,9 +88,8 @@ void	expanding(t_tokenizer **token)
 			temp = env_var(temp);
 		if ((*temp)->op == NOT_OP)
 			quote_handling((*temp));
-		// free(glb_list()->quotes_index);
 		if ((*temp) == NULL)
-			break;
+			break ;
 		temp = &(*temp)->next;
 	}
 }

@@ -19,7 +19,7 @@ static int	*count_quotes(char *str)
 			while (str[i] != c)
 				i++;
 		}
-		i++; 
+		i++;
 	}
 	if (count == 0)
 		return (NULL);
@@ -74,14 +74,13 @@ int	valid_expanding(char *str, int *len)
 static void	expand_dq(t_tokenizer *token, int *i)
 {
 	char	*env_value;
-	int			len;
+	int		len;
 
 	if ((token)->str[*i] == '$')
 	{
 		if (valid_expanding((token)->str + *i, &len))
 		{
 			env_value = check_env(ft_substr((token)->str, *i + 1, len - 1));
-			// add_env_token_list(env_token_list, env_value, i);
 			(token)->str = re_alloc((token)->str, i, len, env_value);
 		}
 	}
@@ -90,7 +89,7 @@ static void	expand_dq(t_tokenizer *token, int *i)
 void	expand_nq(t_tokenizer **token, int *i)
 {
 	char	*env_value;
-	int			len;
+	int		len;
 
 	if ((*token)->str[*i] == '$')
 	{
@@ -104,9 +103,9 @@ void	expand_nq(t_tokenizer **token, int *i)
 
 void	save_index(t_tokenizer *token)
 {
-	int	i;
-	int	qi;	
-	char c;
+	int		i;
+	int		qi;
+	char	c;
 
 	i = 0;
 	qi = 0;

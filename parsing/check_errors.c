@@ -2,15 +2,15 @@
 
 int	input_error(char *input)
 {
-	int	i;
-	int	error;
+	int		i;
+	int		error;
 	char	c;
 
 	i = 0;
 	while (input[i])
 	{
 		error = 1;
-		c = input[i]; 
+		c = input[i];
 		if (is_quote(c))
 		{
 			i++;
@@ -19,7 +19,7 @@ int	input_error(char *input)
 			if (c == input[i])
 				error = 0;
 			if (error == 1)
-			{	
+			{
 				printf("minishell: Unexpected token\n");
 				return (1);
 			}
