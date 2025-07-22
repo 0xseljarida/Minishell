@@ -25,6 +25,7 @@ void	redirection_infos(t_tokenizer *token)
 		token = token->next;
 	}
 }
+
 int main(int ac, char **av, char **env)
 {
 
@@ -101,6 +102,7 @@ int main(int ac, char **av, char **env)
 		}
 //	print_env(glb_list()->env);
 	free_args(args);
-  }
+	}
+	// free_env ???
 	free_tokens(input, tokens);
 }
