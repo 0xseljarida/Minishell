@@ -119,7 +119,8 @@ void	save_index(t_tokenizer *token)
 			i++;
 			while (token->str[i] != c)
 			{
-				expand_dq(token, &i);
+				if (c == '\"')
+					expand_dq(token, &i);
 				i++;
 			}
 			token->quotes_index[qi++] = i;
