@@ -32,13 +32,13 @@ int	quote_handling(t_tokenizer *token)
 	while (token->str[i] != 0)
 	{
 		q = is_quote(token->str[i]);
-		if (q != 0 && token->quotes_index != NULL && i == (token->quotes_index[j] - (j / 2)))
+		if (q != 0 && token->quotes_index != NULL && i == (token->quotes_index[j] - j))
 		{
 			start = i;
 			i++;
 			j++;
 			while (q != is_quote(token->str[i])
-				|| i != (token->quotes_index[j] - j / 2))
+				|| i != (token->quotes_index[j] - ((j -  1))))
 				i++;
 			remove_quote(token->str, start, i);
 			j++;

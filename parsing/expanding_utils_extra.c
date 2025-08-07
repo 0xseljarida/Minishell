@@ -122,11 +122,17 @@ void	save_index(t_tokenizer *token)
 			while (token->str[i] != c)
 			{
 				if (c == '\"')
+				{
 					expand_dq(token, &i);
+				}
 				i++;
 			}
 			token->quotes_index[qi++] = i;
 		}
 		i++;
 	}
+	// printf("this is pointer token : %p and %ld and %s\n",token ,malloc_usable_size(token->quotes_index), (token)->str);
+	// for(int k = 0 ; k < 4 && token->quotes_index; k++)
+	// 	printf("token---->  %d\n", token->quotes_index[k]);
+	// printf("here s : %s", token->str);// 
 }

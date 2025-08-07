@@ -58,7 +58,7 @@ int main(int ac, char **av, char **env)
 
     t_tokenizer *tokens;
     char *input;
-    int exit_status;
+    int	exit_status;
     char **args;
     char **envp;
 	char *path;
@@ -66,19 +66,19 @@ int main(int ac, char **av, char **env)
   (void)ac;
   (void)av;
 
-  glb_list()->env = NULL;
-  init_env_var(&glb_list()->env, env);
-//   glb_list()->env = save_env(env); 
+//   glb_list()->env = NULL;
+//   init_env_var(&glb_list()->env, env);
+  glb_list()->env = save_env(env); 
   while (1) {
     input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell $> \033[0m");
 	if (input_error(input) == 1)
-		break;
+	{
+		exit(1);
+	}
     if (!input) {
-      printf("exit\n");
+    	printf("exit\n");
       exit(0); // ou free et exit proprement si nécessaire
     }
-	if (input_error(input) == 1)
-		break;
     tokens = tokenizer(input);		
 	if (check_parsing_errors(tokens))
 		continue;

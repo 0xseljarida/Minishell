@@ -93,7 +93,6 @@ int	to_retokenize(t_tokenizer **token)
 			i++;
 			while ((*token)->str[i] != 0 && (*token)->str[i] != c)
 				i++;
-			
 		}
 		if (isspace(c))
 			return (1);
