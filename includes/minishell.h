@@ -18,7 +18,7 @@
 # include <malloc.h>
 # define TRUE 1
 # define FALSE 2
-
+#define SHELL_CHILD_PID_FILE "/tmp/minishell_child_pid"
 
 
 typedef enum e_operator
@@ -101,9 +101,11 @@ typedef struct s_garbage_collector
 	t_ast			*tree_node;
 	t_tokenizer		*token;
 	t_redirections	*rdc;
+	int				exit_status;
 
 }				t_garbage_collector;
 
+extern t_garbage_collector		*g_gc;
 typedef struct s_env
 {
 	char	*name;
@@ -165,6 +167,11 @@ int		input_error(char *input);
 int		check_parsing_errors(t_tokenizer *token);
 /*BUILTINS*/
 
+void signal_handler_general(int signum);
+void signal_handler_input(int signum);
+void signal_handler_heredoc(int signum);
+void setup_signals(void);
+void set_signal_handler(t_ast *ast);
 void 	pwd(int *exit_status);
 void 	echo(char **args, int *exit_status);
 void	ft_exit(char **args);
