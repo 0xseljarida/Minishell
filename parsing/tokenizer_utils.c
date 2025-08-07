@@ -45,6 +45,7 @@ void	fill_the_node_op(t_tokenizer *node, int op, int i)
 	node->op = op;
 	node->str = NULL;
 	node->next = NULL;
+	node->quotes_index = NULL;
 }
 
 void	fill_the_node_str(t_tokenizer *node, int i, char *token)
@@ -53,6 +54,7 @@ void	fill_the_node_str(t_tokenizer *node, int i, char *token)
 	node->op = NOT_OP;
 	node->str = token;
 	node->next = NULL;
+	node->quotes_index = NULL;
 }
 
 char	is_quote(char c)

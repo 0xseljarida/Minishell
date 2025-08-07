@@ -75,20 +75,24 @@ t_here_doc	*here_doc(t_tokenizer *token)
 void	tokenize_the_envar(t_tokenizer **token)
 {
 	t_tokenizer	**token_temp;
-	char		*str;
-	t_tokenizer	**token_next;
+	t_tokenizer	*token_next;
 	t_tokenizer	*token_dele;
+	char		*str;
 
+	
 	token_dele = *token;
 	str = (*token)->str;
-	token_next = &(*token)->next;
+	token_next = (*token)->next;
 	*token = tokenizer_for_expanding((*token)->str);
+	printf("this is pointer token : %p and %ld and %s\n",*token ,malloc_usable_size(*token), (*token)->str);
+	printf("this is second point :%p and %ld and %s\n",token_dele, malloc_usable_size(token_dele), (token_dele)->str);
 	free(str);
 	free(token_dele);
 	token_temp = token;
+	printf("this is second point :%p and %ld and %s\n",token_temp, malloc_usable_size(*token_temp), (*token_temp)->str);
 	while ((*token_temp) != NULL)
 	{
 		token_temp = &(*token_temp)->next;
 	}
-	*token_temp = *token_next;
+	*token_temp = token_next;
 }

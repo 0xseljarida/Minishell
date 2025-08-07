@@ -8,7 +8,7 @@ HEADER = includes/minishell.h
 OBJ = ${SRC:.c=.o}
 
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror -Iincludes
+CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=address,undefined -g3
 
 LIB_DIR = libft
 LIB_FILE = libft.a

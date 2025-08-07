@@ -56,10 +56,11 @@ int main(int ac, char **av, char **env)
 	if (check_parsing_errors(tokens))
 		continue;
     expanding(&tokens);
+    print_tokenizer(tokens);
 	redirection_infos(tokens);	
 	//error
-    print_tokenizer(tokens);
 	args = tokens_to_args(tokens);
+	int i = 0;
 	if (args && args[0])
 	{
 		exit_status = 0;
@@ -76,30 +77,30 @@ int main(int ac, char **av, char **env)
 				exit_status = 127;
 			}
 			else
+			{
+				envp = envlist_to_array(glb_list()->env);
+				if (!envp)
 				{
-					envp = envlist_to_array(glb_list()->env);
-					if (!envp)
-					{
-						perror("envlist_to_array");
-						free(path);
-						exit(1);
-					}
-
-					if (fork() == 0)
-					{
-						execve(path, args, envp);
-						perror("execve");
-						exit(1);
-					}
-					else
-					{
-						wait(&exit_status);
-					}
+					perror("envlist_to_array");
 					free(path);
-					free_strs(envp);
+					exit(1);
 				}
+				if (fork() == 0)
+				{
+					execve(path, args, envp);
+					perror("execve");
+					exit(1);
+				}
+				else
+				{
+					wait(&exit_status);
+				}
+				free(path);
+				free_strs(envp);
 			}
 		}
+
+	}
 //	print_env(glb_list()->env);
 	free_args(args);
 	}

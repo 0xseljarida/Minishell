@@ -15,6 +15,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include "../libft/libft.h"
+# include <malloc.h>
 # define TRUE 1
 # define FALSE 2
 
@@ -150,7 +151,7 @@ char	is_quote(char c);
 char		*check_env(char *str);
 char		*re_alloc(char *str, int *start, int len, char  *env_value);
 t_here_doc	*here_doc(t_tokenizer *token);
-void		expand_nq(t_tokenizer **token, int *i);
+int		expand_nq(t_tokenizer **token, int *i);
 t_tokenizer	*tokenizer_for_expanding(char *input);
 void		tokenize_the_envar(t_tokenizer **token);
 int			to_retokenize(t_tokenizer **token);

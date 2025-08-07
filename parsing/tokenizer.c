@@ -35,6 +35,7 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int *node_i)
 	size_t		end;
 	char		*to_alloc;
 
+	// printf("salam\n");
 	end = 0;
 	while (input[*i + end] != '\0' && !ft_isspace(input[*i + end])
 		&& (is_operator(input + *i + end) == NOT_OP
@@ -48,6 +49,7 @@ static int	alloc_str(char *input, int *i, t_tokenizer **node, int *node_i)
 		return (*i);
 	*node = add_node(&((*node)->next));
 	to_alloc = ft_substr(input, *i, end);
+
 	fill_the_node_str(*node, *node_i, to_alloc);
 	*i = *i + end;
 	*node_i += 1;

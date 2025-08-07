@@ -81,16 +81,19 @@ int	to_retokenize(t_tokenizer **token)
 {
 	int			i;
 	char		c;
+	// int			j;
 
 	i = 0;
-	while ((*token)->str[i] != 0)
+	while ((*token)->str != NULL && (*token)->str[i] != 0)
 	{
 		c = (*token)->str[i];
+		//  && (*token)->quotes_index != NULL && (*token)->quotes_index[j++] = i
 		if (is_quote(c))
 		{
 			i++;
-			while ((*token)->str[i] == c)
+			while ((*token)->str[i] != 0 && (*token)->str[i] != c)
 				i++;
+			
 		}
 		if (isspace(c))
 			return (1);

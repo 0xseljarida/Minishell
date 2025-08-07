@@ -86,7 +86,7 @@ static void	expand_dq(t_tokenizer *token, int *i)
 	}
 }
 
-void	expand_nq(t_tokenizer **token, int *i)
+int	expand_nq(t_tokenizer **token, int *i)
 {
 	char	*env_value;
 	int		len;
@@ -97,8 +97,10 @@ void	expand_nq(t_tokenizer **token, int *i)
 		{
 			env_value = check_env(ft_substr((*token)->str, *i + 1, len - 1));
 			(*token)->str = re_alloc((*token)->str, i, len, env_value);
+			return (1);
 		}
 	}
+	return (0);
 }
 
 void	save_index(t_tokenizer *token)
