@@ -60,7 +60,6 @@ int main(int ac, char **av, char **env)
 	redirection_infos(tokens);	
 	//error
 	args = tokens_to_args(tokens);
-	int i = 0;
 	if (args && args[0])
 	{
 		exit_status = 0;
