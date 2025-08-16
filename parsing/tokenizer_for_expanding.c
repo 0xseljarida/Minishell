@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_for_expanding.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sel-jari <marvin@42.ma>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/13 01:35:03 by sel-jari          #+#    #+#             */
+/*   Updated: 2025/08/13 01:35:06 by sel-jari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static t_tokenizer	*add_node(t_tokenizer **node)
 {
-	*node = malloc(sizeof(t_tokenizer));
+	*node = gc_alloc(sizeof(t_tokenizer));
 	if (*node == NULL)
 	{
 		exit(0);
@@ -13,16 +25,19 @@ static t_tokenizer	*add_node(t_tokenizer **node)
 
 static int	alloc_quote(char *input, size_t *end)
 {
-	int	bl;
+	int		bl;
+	char	c;
 
 	bl = 0;
-	while (is_quote(input[*end]))
+	c = input[*end];
+	while (is_quote(c))
 	{
 		*end += 1;
-		while (is_quote(input[*end]) == 0)
+		while (is_quote(input[*end]) != c)
 			*end += 1;
 		*end += 1;
 		bl = 1;
+		c = input[*end];
 	}
 	return (bl);
 }
@@ -81,13 +96,11 @@ int	to_retokenize(t_tokenizer **token)
 {
 	int			i;
 	char		c;
-	// int			j;
 
 	i = 0;
 	while ((*token)->str != NULL && (*token)->str[i] != 0)
 	{
 		c = (*token)->str[i];
-		//  && (*token)->quotes_index != NULL && (*token)->quotes_index[j++] = i
 		if (is_quote(c))
 		{
 			i++;

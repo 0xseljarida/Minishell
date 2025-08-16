@@ -1,137 +1,75 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sel-jari <marvin@42.ma>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/13 16:32:26 by sel-jari          #+#    #+#             */
+/*   Updated: 2025/08/13 16:32:27 by sel-jari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	redirection_infos(t_tokenizer *token)
+static void	execution(char **args, t_tokenizer *tokens)
 {
-	t_operator	op;
+	pid_t	pid;
+	int		exit_status;
 
-	while (token != NULL)
+	exit_status = 0;
+	if (!exec_nonfork_builtin(args, &exit_status))
 	{
-		op = token->op;
-		if (op == GREAT)
-		{
-			token = token->next;
-			token->redirect.file_fd = open(token->str, O_CREAT | O_RDONLY);
-		}
-		else if (op == LESS)
-		{
-			token = token->next;
-			token->redirect.file_fd = open(token->str, O_CREAT | O_WRONLY);
-		}
-		else if (op == LESS_LESS)
-		{
-			token = token->next;
-			token->redirect.file_fd = open(token->str, O_CREAT | O_APPEND);
-		}
-		token = token->next;
-	}
-}
-t_env	*save_env(char **env)
-{
-	t_env	*env_list;
-	t_env	*env_head;
-	int		i;
-	int		j;
-
-	i = 0;
-	env_head = malloc(sizeof(t_env));
-	env_list = env_head;
-	while (env[i] != 0)	
-	{
-		j = 0;
-		while (env[i][j] != '=')
-			j++;
-		env_list->name = ft_substr(env[i], 0, j);
-		env_list->value = ft_substr(env[i], j + 1, ft_strlen(env[i]));
-		i++;
-		if (env[i] != NULL)
-			env_list->next = malloc(sizeof(t_env));
+		pid = fork();
+		if (pid == 0)
+			execute_child_process(args, tokens);
 		else
-			break;
-		env_list = env_list->next;
+			handle_parent_process_main(pid, &exit_status);
 	}
-	env_list->next = NULL;
-	return (env_head);
 }
 
-int main(int ac, char **av, char **env)
+static void	parsing(char *input)
 {
+	t_tokenizer	*tokens;
+	char		**args;
+	int			exit_status;
 
-    t_tokenizer *tokens;
-    char *input;
-    int	exit_status;
-    char **args;
-    char **envp;
-	char *path;
+	if (check_input_errors(input))
+		return ;
+	tokens = tokenizer(input);
+	if (check_parsing_errors(tokens, input))
+		return ;
+	dont_expand_herdoc(tokens);
+	expanding(&tokens);
+	set_signal_handler(tokens);
+	init_redirect_fds(tokens);
+	redirection_infos(tokens);
+	if (has_pipe(tokens, input, &exit_status))
+		return ;
+	args = tokens_to_args(tokens);
+	if (args && args[0] && tokens->op != ITS_NULL_EXPAND)
+		execution(args, tokens);
+	close_redirection_fds(tokens);
+	free_args(args);
+	free_tokens(input, tokens);
+}
 
-  (void)ac;
-  (void)av;
+int	main(int ac, char **av, char **env)
+{
+	char	*input;
 
-//   glb_list()->env = NULL;
-//   init_env_var(&glb_list()->env, env);
-	//setup_signals();
-	glb_list()->env = save_env(env); 
+	(void)ac;
+	(void)av;
+	setup_signals();
+	glb_list()->env = save_env(env);
+	update_shell_lvl(&glb_list()->env);
+	glb_list()->exit_status = 0;
 	while (1)
 	{
 		input = readline("\033[1;32m➜\033[0m\033[1;36m Minishell $> \033[0m");
-		if (input_error(input) == 1)
-		{
-			exit(1);
-		}
-		if (!input)
-		{
-			printf("exit\n");
-			exit(0); // ou free et exit proprement si nécessaire
-		}
-		tokens = tokenizer(input);		
-		if (check_parsing_errors(tokens))
-			continue;
-		expanding(&tokens);
-		print_tokenizer(tokens);
-		redirection_infos(tokens);	
-		//error
-		args = tokens_to_args(tokens);
-		if (args && args[0])
-		{
-			exit_status = 0;
-			if (execute_builtin(args, &glb_list()->env, &exit_status) == 1)
-				printf("Builtin command executed successfully.\n");
-			else
-			{
-				path = get_cmd_path(args[0], glb_list()->env);
-				if (!path)
-				{
-					ft_putstr_fd("minishell: command not found: ", 2);
-					ft_putstr_fd(args[0], 2);
-					ft_putchar_fd('\n', 2);
-					exit_status = 127;
-				}
-				else
-				{
-					envp = envlist_to_array(glb_list()->env);
-					if (!envp)
-					{
-						perror("envlist_to_array");
-						free(path);
-						exit(1);
-					}
-					if (fork() == 0)
-					{
-						execve(path, args, envp);
-						perror("execve");
-						exit(1);
-					}
-					else
-					{
-						wait(&exit_status);
-					}
-					free(path);
-					free_strs(envp);
-				}
-			}
-		//print_env(glb_list()->env);
-		free_args(args);
-		free_tokens(input, tokens);
-		}
-		// free_env	 
+		glb_list()->input = input;
+		parsing(input);
 	}
+	gc_free_all();
+	return (glb_list()->exit_status);
 }

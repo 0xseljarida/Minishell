@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sel-jari <marvin@42.ma>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/13 10:52:03 by sel-jari          #+#    #+#             */
+/*   Updated: 2025/08/13 10:52:04 by sel-jari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <linux/limits.h>
@@ -16,10 +27,8 @@
 # include <unistd.h>
 # include "../libft/libft.h"
 # include <malloc.h>
-# define TRUE 1
-# define FALSE 2
-#define SHELL_CHILD_PID_FILE "/tmp/minishell_child_pid"
-
+# define READING_END 0
+# define WRITING_END 1
 
 typedef enum e_operator
 {
@@ -37,6 +46,8 @@ typedef enum e_operator
 	NEXT,
 	NOT_OP,
 	ENV_CASE,
+	ITS_NULL_EXPAND,
+	DO_NOT_EXPAND,
 }				t_operator;
 
 typedef enum e_quote
@@ -49,27 +60,27 @@ typedef enum e_quote
 	THERES_QUOTE,
 }			t_quote;
 
-
 typedef struct s_here_doc
 {
 	char				*str;
 	struct s_here_doc	*next;
-}t_here_doc;
+}				t_here_doc;
 
-typedef struct	s_env_list 
+typedef struct s_env_list
 {
 	char				*str;
 	int					i;
 	struct s_env_list	*next;
-}				t_env_list;
+}					t_env_list;
 
 typedef struct s_redirections
 {
 	t_operator		type;
 	char			*str;
 	int				file_fd;
+	int				errnum;
 	t_quote			qt;
-	
+
 }			t_redirections;
 
 typedef struct s_tokenizer
@@ -83,12 +94,13 @@ typedef struct s_tokenizer
 	t_env_list			*env_list;
 	t_here_doc			*hd;
 	t_redirections		redirect;
+	t_operator			red_case;
 	struct s_tokenizer	*next;
 }				t_tokenizer;
 
 typedef struct s_ast
 {
-	t_operator 		type;
+	t_operator		type;
 	t_redirections	*rdc;
 	t_tokenizer		*cmd_line;
 	char			*cmd;
@@ -96,109 +108,170 @@ typedef struct s_ast
 	struct s_ast	*left;
 }				t_ast;
 
-typedef struct s_garbage_collector
-{
-	t_ast			*tree_node;
-	t_tokenizer		*token;
-	t_redirections	*rdc;
-	int				exit_status;
-
-}				t_garbage_collector;
-
-extern t_garbage_collector		*g_gc;
 typedef struct s_env
 {
-	char	*name;
-	char	*value;	
-	struct s_env *next; 
+	char			*name;
+	char			*value;
+	struct s_env	*next;
 
-}t_env;
+}				t_env;
 
 typedef struct s_glb
 {
+	char			*input;
 	t_ast			*ast;
 	t_env			*env;
 	t_tokenizer		*tokens;
 	t_redirections	*rdr;
+	t_list			*gc;
+	int				exit_status;
+	int				termination_status;
+	int				is_pipeline;
+	pid_t			pid_pipeline[2];
 
-}t_glb;
+}				t_glb;
 
+typedef struct s_pipe_data
+{
+	int				nseg;
+	int				(*pfds)[2];
+	t_tokenizer		**starts;
+	t_tokenizer		**ends;
+	pid_t			*pids;
+	t_glb			*glb;
+	int				*exit_status;
+}				t_pipe_data;
 
-t_glb	*glb_list(void);
-void	print_env(t_env *env_list);
-void	print_node(t_ast	*ast);
-void	print_tree(t_ast	*ast);
-void	print_tokenizer(t_tokenizer *tokens);
-void	print_op(t_operator op);
+t_glb		*glb_list(void);
+void		print_env(t_env *env_list);
+void		print_node(t_ast	*ast);
+void		print_tree(t_ast	*ast);
+void		print_tokenizer(t_tokenizer *tokens);
+void		print_op(t_operator op);
+void		*gc_alloc(size_t size);
+void		gc_free_all(void);
 
 /* FREE_EXIT*/
 
-extern t_garbage_collector		*g_free;
-void	free_tokens(char *input, t_tokenizer *tokens);
-void	free_env(t_env *env);
-
-t_env 	*save_env(char **env); // already exist in main , could delete this line
+void		free_tokens(char *input, t_tokenizer *tokens);
+void		free_env(t_env *env);
+t_env		*save_env(char **env);
+int			check_input_errors(char *input);
+void		free_str_and_itoa(char *temp_itoi, char *str);
 
 /* TOKENIZER */
 
-int		is_operator(char *str);
-char	*alloc_quote_help(char *str, int *i);
-void	fill_the_node_str(t_tokenizer *node, int i, char *token);
-void	fill_the_node_op(t_tokenizer *node, int op, int i);
-t_tokenizer *tokenizer(char *input);
-void 	expanding(t_tokenizer **token);
-char	is_quote(char c);
-
+t_tokenizer	*tokenizer(char *input);
+int			is_operator(char *str);
+char		*alloc_quote_help(char *str, int *i);
+void		fill_the_node_str(t_tokenizer *node, int i, char *token);
+void		fill_the_node_op(t_tokenizer *node, int op, int i);
+void		expanding(t_tokenizer **token);
+char		is_quote(char c);
+void		remove_quote(char *str, int start, int end);
+int			quote_handling(t_tokenizer *token);
+t_env		*save_env(char **env);
+void		dont_expand_herdoc(t_tokenizer *tokens);
 /*EXPANDING*/
-char		*check_env(char *str);
-char		*re_alloc(char *str, int *start, int len, char  *env_value);
 t_here_doc	*here_doc(t_tokenizer *token);
-int		expand_nq(t_tokenizer **token, int *i);
+t_tokenizer	**env_var(t_tokenizer **token);
 t_tokenizer	*tokenizer_for_expanding(char *input);
+char		*check_env(char *str, int *check);
+char		*re_alloc(char *str, int *start, int len, char *env_value);
 void		tokenize_the_envar(t_tokenizer **token);
-int			to_retokenize(t_tokenizer **token);
 void		save_index(t_tokenizer *token);
+int			to_retokenize(t_tokenizer **token);
+int			expand_nq(t_tokenizer **token, int *i);
+int			remove_dollar_quote(t_tokenizer **token, int *i);
+char		*modify_envar_for_nq(char *str);
+void		quote_quotes(char *result, char *str, int len);
+void		if_expand_null(t_tokenizer **token, t_tokenizer *current);
 /* AST_ PASRER */
-t_ast	*ast_builder(t_tokenizer *token);
+t_ast		*ast_builder(t_tokenizer *token);
 
 /* ERRORS */
-
-int		input_error(char *input);
-int		check_parsing_errors(t_tokenizer *token);
+int			input_error(char *input);
+int			check_parsing_errors(t_tokenizer *token, char *input);
+void		handle_execve_error_for_main(char **args,
+				char *path, char **envp);
+void		handle_directory_error(char *cmd_name, char *path);
+void		handle_command_not_found(char *arg, char *path);
 /*BUILTINS*/
-
-void signal_handler_general(int signum);
-void signal_handler_input(int signum);
-void signal_handler_heredoc(int signum);
-void setup_signals(void);
-void set_signal_handler(t_ast *ast);
-void 	pwd(int *exit_status);
-void 	echo(char **args, int *exit_status);
-void	ft_exit(char **args);
-void	builtin_unset(char **args, t_env **env_list);
-void 	ft_exit(char **args);
-long long my_ft_atoll(const char *str, int *overflow);
-int 	ft_env(char **args, t_env *env_list);
-int 	ft_cd(char **args, t_env **env_list);
-int 	ft_export(char **args, t_env **env_list);
-int 	is_builtin(const char *cmd);
-int 	execute_builtin(char **args, t_env **env_list, int *exit_status);
-char	**tokens_to_args(t_tokenizer *tokens);
-void	free_args(char **args);
-int		execute_command(char **args, t_env **env);
-char	*str_concat_three(const char *a, const char *b, const char *c);
-void	free_strs(char **strs);
-char	*get_cmd_path(char *cmd, t_env *env_list);
+void		handle_parent_process_main(pid_t pid, int *exit_status);
+void		execute_child_process(char **args, t_tokenizer *tokens);
+int			exec_nonfork_builtin(char **args, int *exit_status);
+int			open_heredoc_and_write_pipe(t_tokenizer *token,
+				t_env *env, int *exit_status);
+int			process_heredoc_line(t_tokenizer *token,
+				t_env *env, int write_fd, char *line);
+int			write_line_to_pipe(int write_fd, char *line);
+void		setup_child_pipes(int idx, int nseg, int (*pfds)[2]);
+void		wait_children(pid_t *pids, int nseg, int *last_status);
+int			is_name_char(int c);
+void		setup_heredoc_signals(void);
+int			redirection_infos(t_tokenizer *tokens);
+int			execute_redirections(t_tokenizer *tokens);
+void		close_redirection_fds(t_tokenizer *token);
+void		init_redirect_fds(t_tokenizer *tokens);
+int			open_redirection_file(t_tokenizer *token, t_env *env);
+int			handle_redirection_error(t_tokenizer *token, t_tokenizer *start);
+/* HEREDOC EXPANSION */
+int			heredoc_delimiter_is_quoted(t_tokenizer *delim_tok);
+char		*expand_heredoc_line(const char *line, t_env *env);
+void		signal_handler_general(int signum);
+void		signal_handler_input(int signum);
+void		signal_handler_heredoc(int signum);
+void		setup_signals(void);
+void		set_signal_handler(t_tokenizer *token);
+void		pwd(int *exit_status);
+void		echo(char **args, int *exit_status);
+void		ft_exit(char **args);
+void		builtin_unset(char **args, t_env **env_list);
+void		ft_exit(char **args);
+int			ft_env(char **args, t_env *env_list);
+int			ft_cd(char **args, t_env **env_list);
+void		print_cd_error(const char *path);
+char		*get_env_value_or_default(t_env *env_list,
+				const char *name, const char *default_val);
+int			ft_export(char **args, t_env **env_list);
+void		print_exported_vars(t_env *env);
+int			is_builtin(const char *cmd);
+int			execute_builtin(char **args, t_env **env_list, int *exit_status);
+char		**tokens_to_args(t_tokenizer *tokens);
+void		free_args(char **args);
+int			execute_command(char **args, t_env **env);
+char		*str_concat_three(const char *a, const char *b, const char *c);
+void		free_strs(char **strs);
+char		*get_cmd_path(char *cmd, t_env *env_list);
 /*ENVIRONMENT VARIABLES*/
-int		ft_strcmp(const char *s1, const char *s2);
-void	init_env_var(t_env **env_list, char **envp);
-t_env	*create_env_node(char *name, char *value);
-void	insert_env_node(t_env **env_list, t_env *new_node);
-char	*get_env_value(char *name, t_env *env);
-void	free_env(t_env *env);
-int		update_env_var(t_env *env_list, t_env *new_node);
-void	update_shell_lvl(t_env **env_list);
-char	**envp_to_env_vector(t_env *env_list);
-char	**envlist_to_array(t_env *env_list);
-
+int			ft_strcmp(const char *s1, const char *s2);
+void		init_env_var(t_env **env_list, char **envp);
+t_env		*create_env_node(char *name, char *value);
+void		insert_env_node(t_env **env_list, t_env *new_node);
+char		*get_env_value(char *name, t_env *env);
+void		free_env(t_env *env);
+int			update_env_var(t_env *env_list, t_env *new_node);
+void		update_shell_lvl(t_env **env_list);
+char		**envp_to_env_vector(t_env *env_list);
+char		**envlist_to_array(t_env *env_list);
+int			has_pipe(t_tokenizer *tokens, char *input, int *exit_status);
+void		cleanup_pipes(int (*pfds)[2], int count);
+void		cleanup_pipeline(t_pipe_data *pipe_data, int *last_status);
+void		execute_pipeline(t_tokenizer *tokens, t_glb *glb, int *exit_status);
+void		save_exit_status(t_glb *glb, int status_code);
+void		close_all_pipes(int (*pfds)[2], int n);
+int			create_pipes(int nseg, int (**out_pfds)[2]);
+void		free_pipes(int (*pfds)[2], int n_pipes);
+void		perform_execve(char **args, char *path, t_env *env);
+int			init_segments(t_tokenizer ***starts,
+				t_tokenizer ***ends, t_tokenizer *tokens, int nseg);
+int			init_pipeline_data(t_pipe_data *pipe_data, t_tokenizer *tokens);
+int			alloc_pids(pid_t **pids, int nseg);
+void		collect_segments(t_tokenizer *tokens,
+				t_tokenizer **starts, t_tokenizer **ends, int n);
+int			count_segments(t_tokenizer *tokens);
+void		extract_exit_status(int status, int *exit_status);
+void		ignore_interactive_signals(void);
+void		print_minishell_err(const char *cmd, const char *msg);
+long long	my_ft_atoll(const char *str, int *overflow);
 #endif

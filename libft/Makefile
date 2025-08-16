@@ -29,14 +29,14 @@ OBJF = ${SRCF:.c=.o}
 OBJBF = ${SRCBF:.c=.o}
 NAME = libft.a
 LIBC = ar rcs
-CC = cc
 RM = rm -f
-WFLAGS = -Wall -Wextra -Werror
+CC = gcc 
+WFLAGS = -Wall -Wextra -Werror -Iincludes -g3 -O0 -fsanitize=address,leak,undefined 
 
 all: ${NAME}
 
-${NAME}: ${OBJF}
-	${LIBC} ${NAME} ${OBJF}
+${NAME}: ${OBJF} ${OBJBF}
+	${LIBC} ${NAME} ${OBJF} ${OBJBF}
 
 bonus: ${OBJBF}
 	${LIBC} ${NAME} ${OBJBF}

@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   exec_command_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sel-jari <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hsennane <hsennane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 22:44:05 by sel-jari          #+#    #+#             */
-/*   Updated: 2024/11/01 22:44:07 by sel-jari         ###   ########.fr       */
+/*   Created: 2025/08/12 05:23:58 by hsennane          #+#    #+#             */
+/*   Updated: 2025/08/12 05:24:00 by hsennane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdio.h>
+#include "minishell.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+void	free_strs(char **strs)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	if (size)
+	if (!strs)
+		return ;
+	while (strs[i])
 	{
-		while ((i < size - 1) && src[i])
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = 0;
+		free(strs[i]);
+		i++;
 	}
-	return (ft_strlen(src));
+	free(strs);
 }
