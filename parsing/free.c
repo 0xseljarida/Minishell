@@ -42,19 +42,5 @@ void	free_tokens(char *input, t_tokenizer *tokens)
 		free(temp);
 		temp = NULL;
 	}
-	free(input);
+	(void)input;
 }
-
-// void	free_env(t_env *env)
-// {
-// 	void	*tmp;
-
-// 	while (env != NULL)
-// 	{
-// 		free(env->name);
-// 		free(env->value);
-// 		tmp = env;
-// 		env = env->next;
-// 		free(tmp);
-// 	}
-// }

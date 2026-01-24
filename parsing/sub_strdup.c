@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   sub_strdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sel-jari <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 22:46:04 by sel-jari          #+#    #+#             */
-/*   Updated: 2024/11/01 22:46:24 by sel-jari         ###   ########.fr       */
+/*   Created: 2025/08/19 07:47:48 by sel-jari          #+#    #+#             */
+/*   Updated: 2025/08/19 07:47:50 by sel-jari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdio.h>
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr_(char const *s, unsigned int start, size_t len)
 {
 	char	*ptr;
 	size_t	i;
@@ -25,9 +23,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (start >= ft_strlen(s))
 		return (ft_calloc(1, sizeof(char)));
 	if (ft_strlen(s) <= len - start)
-		ptr = gc_alloc(ft_strlen(s) - start + 1);
+		ptr = malloc(ft_strlen(s) - start + 1);
 	else
-		ptr = gc_alloc(len + 1);
+		ptr = malloc(len + 1);
 	if (!ptr)
 		return (0);
 	while (i < len && s[start + i])
@@ -39,10 +37,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (ptr);
 }
 
-int	ft_isspace(char c)
+char	*ft_strdup_(const char *s)
 {
-	if (c == '\n' || c == '\v' || c == '\f' || c == ' '
-		|| c == '\r' || c == '\t')
-		return (1);
-	return (0);
+	char	*d;
+	size_t	sz;
+
+	sz = ft_strlen(s) + 1;
+	d = (char *)malloc(sz);
+	if (d)
+		ft_memcpy(d, s, sz);
+	return (d);
 }

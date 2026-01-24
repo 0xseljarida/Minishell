@@ -27,8 +27,7 @@ t_tokenizer	**env_var(t_tokenizer **token)
 			while ((*token)->str[i] != c)
 				i++;
 		}
-		if ((*token)->red_case != DO_NOT_EXPAND)
-			expand_nq(token, &i);
+		expand_nq(token, &i);
 		i++;
 	}
 	if (to_retokenize(token) == 1)
@@ -76,12 +75,25 @@ int	quote_handling(t_tokenizer *token)
 void	dont_expand_herdoc(t_tokenizer *tokens)
 {
 	t_tokenizer	*temp;
+	int			i;
 
+	i = 0;
 	temp = tokens;
 	while (temp != NULL)
 	{
 		if (temp != NULL && temp->op == LESS_LESS && temp->next != NULL)
+		{
 			temp->next->red_case = DO_NOT_EXPAND;
+			while (temp->next->str[i])
+			{
+				if (is_quote(temp->next->str[i]))
+				{
+					temp->next->red_eof_quote = QUOTE_IN_EOF;
+					break ;
+				}
+				i++;
+			}
+		}
 		temp = temp->next;
 	}
 }

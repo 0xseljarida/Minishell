@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   clean_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sel-jari <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sel-jari <marvin@42.ma>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 22:43:30 by sel-jari          #+#    #+#             */
-/*   Updated: 2024/11/01 22:43:36 by sel-jari         ###   ########.fr       */
+/*   Created: 2025/08/19 05:48:08 by sel-jari          #+#    #+#             */
+/*   Updated: 2025/08/19 05:48:09 by sel-jari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-char	*ft_strdup(const char *s)
+void	clean_exit(int i)
 {
-	char	*d;
-	size_t	sz;
-
-	sz = ft_strlen(s) + 1;
-	d = (char *)gc_alloc(sz);
-	if (d)
-		ft_memcpy(d, s, sz);
-	return (d);
+	gc_free_all();
+	free_env(glb_list()->env);
+	exit(i);
 }

@@ -22,19 +22,18 @@ static void	exec_resolved_command(char **args, t_glb *glb, int *exit_status)
 	{
 		is_blt = execute_builtin(args, &glb->env, exit_status);
 		if (is_blt)
-			exit(*exit_status);
+			clean_exit(*exit_status);
 	}
 	path = get_cmd_path(args[0], glb->env);
 	if (!path)
 	{
 		print_minishell_err(args[0], "command not found");
-		exit(127);
+		clean_exit(127);
 	}
 	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
 	{
 		print_minishell_err(args[0], "Is a directory");
-		free(path);
-		exit(126);
+		clean_exit(126);
 	}
 	perform_execve(args, path, glb->env);
 }
@@ -47,6 +46,7 @@ static void	child_executor(t_pipe_data *pipe_data, int i)
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	pipe_data->glb->is_pipeline = 1;
 	seg_head = pipe_data->starts[i];
 	seg_tail = pipe_data->ends[i];
 	if (seg_tail)
@@ -100,9 +100,11 @@ void	execute_pipeline(t_tokenizer *tokens, t_glb *glb, int *exit_status)
 	pipe_data.nseg = count_segments(tokens);
 	if (pipe_data.nseg <= 0 || !init_pipeline_data(&pipe_data, tokens))
 		return ;
+	process_heredocs(tokens, glb->env, exit_status);
 	spawn_all_children(&pipe_data);
 	ignore_interactive_signals();
 	cleanup_pipeline(&pipe_data, &last_status);
 	extract_exit_status(last_status, pipe_data.exit_status);
 	save_exit_status(pipe_data.glb, *pipe_data.exit_status);
+	setup_signals();
 }

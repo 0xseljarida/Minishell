@@ -31,10 +31,16 @@ void	execute_child_process(char **args, t_tokenizer *tokens)
 	char		*path;
 	char		**envp;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (execute_redirections(tokens))
-		exit(1);
+	{
+		clean_exit(1);
+	}
 	if (execute_builtin(args, &glb_list()->env, &glb_list()->exit_status) == 1)
-		exit(glb_list()->exit_status);
+	{
+		clean_exit(glb_list()->exit_status);
+	}
 	path = get_cmd_path(args[0], glb_list()->env);
 	handle_command_not_found(args[0], path);
 	handle_directory_error(args[0], path);
@@ -42,21 +48,32 @@ void	execute_child_process(char **args, t_tokenizer *tokens)
 	if (!envp)
 	{
 		perror("envlist_to_array");
-		free(path);
-		exit(1);
+		clean_exit(1);
 	}
 	handle_execve_error_for_main(args, path, envp);
 }
 
 void	handle_parent_process_main(pid_t pid, int *exit_status)
 {
+	int	sig;
+
 	if (pid > 0)
 	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		waitpid(pid, exit_status, 0);
+		setup_signals();
 		if (WIFEXITED(*exit_status))
 			glb_list()->exit_status = WEXITSTATUS(*exit_status);
 		else if (WIFSIGNALED(*exit_status))
-			glb_list()->exit_status = 128 + WTERMSIG(*exit_status);
+		{
+			sig = WTERMSIG(*exit_status);
+			if (sig == SIGINT)
+				ft_putstr_fd("\n", STDOUT_FILENO);
+			else if (sig == SIGQUIT)
+				ft_putstr_fd("Quit: (core dumped)\n", STDOUT_FILENO);
+			glb_list()->exit_status = 128 + sig;
+		}
 	}
 	else
 	{

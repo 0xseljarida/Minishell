@@ -48,6 +48,7 @@ typedef enum e_operator
 	ENV_CASE,
 	ITS_NULL_EXPAND,
 	DO_NOT_EXPAND,
+	QUOTE_IN_EOF,
 }				t_operator;
 
 typedef enum e_quote
@@ -95,6 +96,7 @@ typedef struct s_tokenizer
 	t_here_doc			*hd;
 	t_redirections		redirect;
 	t_operator			red_case;
+	t_operator			red_eof_quote;
 	struct s_tokenizer	*next;
 }				t_tokenizer;
 
@@ -155,10 +157,14 @@ void		gc_free_all(void);
 
 void		free_tokens(char *input, t_tokenizer *tokens);
 void		free_env(t_env *env);
+void		init_env_var(t_env **env_list, char **envp);
 t_env		*save_env(char **env);
+char		*ft_substr_(char const *s, unsigned int start, size_t len);
+char		*ft_strdup_(const char *s);
+char		*ft_itoa_(int n);
 int			check_input_errors(char *input);
 void		free_str_and_itoa(char *temp_itoi, char *str);
-
+void		clean_exit(int i);
 /* TOKENIZER */
 
 t_tokenizer	*tokenizer(char *input);
@@ -186,12 +192,9 @@ int			remove_dollar_quote(t_tokenizer **token, int *i);
 char		*modify_envar_for_nq(char *str);
 void		quote_quotes(char *result, char *str, int len);
 void		if_expand_null(t_tokenizer **token, t_tokenizer *current);
-/* AST_ PASRER */
-t_ast		*ast_builder(t_tokenizer *token);
-
 /* ERRORS */
 int			input_error(char *input);
-int			check_parsing_errors(t_tokenizer *token, char *input);
+int			check_parsing_errors(t_tokenizer *token);
 void		handle_execve_error_for_main(char **args,
 				char *path, char **envp);
 void		handle_directory_error(char *cmd_name, char *path);
@@ -202,6 +205,7 @@ void		execute_child_process(char **args, t_tokenizer *tokens);
 int			exec_nonfork_builtin(char **args, int *exit_status);
 int			open_heredoc_and_write_pipe(t_tokenizer *token,
 				t_env *env, int *exit_status);
+void		process_heredocs(t_tokenizer *tokens, t_env *env, int *exit_status);
 int			process_heredoc_line(t_tokenizer *token,
 				t_env *env, int write_fd, char *line);
 int			write_line_to_pipe(int write_fd, char *line);
@@ -209,7 +213,7 @@ void		setup_child_pipes(int idx, int nseg, int (*pfds)[2]);
 void		wait_children(pid_t *pids, int nseg, int *last_status);
 int			is_name_char(int c);
 void		setup_heredoc_signals(void);
-int			redirection_infos(t_tokenizer *tokens);
+int			redirection_infos(t_tokenizer *tokens, char *input);
 int			execute_redirections(t_tokenizer *tokens);
 void		close_redirection_fds(t_tokenizer *token);
 void		init_redirect_fds(t_tokenizer *tokens);
@@ -221,6 +225,8 @@ char		*expand_heredoc_line(const char *line, t_env *env);
 void		signal_handler_general(int signum);
 void		signal_handler_input(int signum);
 void		signal_handler_heredoc(int signum);
+int			wait_for_child(pid_t pid, int *last_status, int i, int nseg);
+void		handle_signal_termination(int last_status, int any_sigint);
 void		setup_signals(void);
 void		set_signal_handler(t_tokenizer *token);
 void		pwd(int *exit_status);

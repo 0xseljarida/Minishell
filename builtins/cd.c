@@ -18,10 +18,10 @@ static int	update_oldpwd(t_env **env_list, char *old_pwd)
 	char	*value;
 
 	if (old_pwd)
-		value = ft_strdup(old_pwd);
+		value = ft_strdup_(old_pwd);
 	else
-		value = ft_strdup("");
-	oldpwd_node = create_env_node(ft_strdup("OLDPWD"), value);
+		value = ft_strdup_("");
+	oldpwd_node = create_env_node(ft_strdup_("OLDPWD"), value);
 	if (!update_env_var(*env_list, oldpwd_node))
 	{
 		insert_env_node(env_list, oldpwd_node);
@@ -44,7 +44,7 @@ static int	update_pwd(t_env **env_list)
 			STDERR_FILENO);
 		return (1);
 	}
-	pwd_node = create_env_node(ft_strdup("PWD"), ft_strdup(cwd));
+	pwd_node = create_env_node(ft_strdup_("PWD"), ft_strdup_(cwd));
 	if (!update_env_var(*env_list, pwd_node))
 	{
 		insert_env_node(env_list, pwd_node);
@@ -61,6 +61,10 @@ static int	change_directory_and_update(t_env **env_list, const char *path)
 	char	*old_pwd;
 
 	old_pwd = get_env_value("PWD", *env_list);
+	if (!path || ft_strlen(path) == 0)
+	{
+		return (0);
+	}
 	if (chdir(path) != 0)
 	{
 		print_cd_error(path);
@@ -105,10 +109,8 @@ int	ft_cd(char **args, t_env **env_list)
 			return (1);
 		if (change_directory_and_update(env_list, target))
 		{
-			free(target);
 			return (1);
 		}
-		free(target);
 		return (0);
 	}
 	if (args[2])

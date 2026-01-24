@@ -32,7 +32,7 @@ int	input_error(char *input)
 				error = 0;
 			if (error == 1)
 			{
-				printf("minishell: Unexpected token\n");
+				ft_putstr_fd("minishell: Unexpected token\n", 2);
 				return (1);
 			}
 		}
@@ -54,7 +54,6 @@ static int	only_spaces_tabs(char *input)
 		}
 		i++;
 	}
-	free(input);
 	return (1);
 }
 
@@ -63,13 +62,14 @@ int	check_input_errors(char *input)
 	if (!input)
 	{
 		printf("exit\n");
-		free_env(glb_list()->env);
 		rl_clear_history();
+		gc_free_all();
+		free_env(glb_list()->env);
 		exit(glb_list()->exit_status);
+		return (1);
 	}
 	if (ft_strlen(input) == 0)
 	{
-		free(input);
 		return (1);
 	}
 	if (only_spaces_tabs(input))
@@ -78,33 +78,33 @@ int	check_input_errors(char *input)
 	{
 		glb_list()->exit_status = 2;
 		add_history(input);
-		free(input);
 		return (1);
 	}
 	add_history(input);
 	return (0);
 }
 
-static int	error_message(int i, char *input, t_tokenizer *token)
+static int	error_message(int i)
 {
 	if (i == 1)
 	{
-		free_tokens(input, token);
-		printf("Minishell: syntax error near unexpectedtoken \'newline\'\n");
+		gc_free_all();
+		ft_putstr_fd("Minishell: syntax error near ", 2);
+		ft_putstr_fd("unexpectedtoken \'newline\'\n", 2);
 		glb_list()->exit_status = 2;
 		return (1);
 	}
 	if (i == 2)
 	{
-		free_tokens(input, token);
-		printf("Minishell: syntax error near unexpected token `|'\n");
+		gc_free_all();
+		ft_putstr_fd("Minishell: syntax error near unexpected token `|'\n", 2);
 		glb_list()->exit_status = 2;
 		return (1);
 	}
 	if (i == 3)
 	{
-		free_tokens(input, token);
-		printf("Minishell: syntax error near unexpected token\n");
+		gc_free_all();
+		ft_putstr_fd("Minishell: syntax error near unexpected token\n", 2);
 		glb_list()->exit_status = 2;
 		return (1);
 	}
@@ -112,25 +112,27 @@ static int	error_message(int i, char *input, t_tokenizer *token)
 		return (0);
 }
 
-int	check_parsing_errors(t_tokenizer *token, char *input)
+int	check_parsing_errors(t_tokenizer *token)
 {
 	if (token->op == PIPE)
-		return (error_message(2, input, token));
+		return (error_message(2));
 	if (token->next != NULL && token->op == LESS_LESS
 		&& token->next->op == PIPE)
-		return (error_message(1, input, token));
+		return (error_message(1));
 	while (token != NULL)
 	{
 		if (token->op != NOT_OP)
 		{
 			if (token->next == NULL)
-				return (error_message(1, input, token));
+				return (error_message(1));
 			if (token->next->op != NOT_OP)
 			{
 				if (token->op == PIPE && token->next->op == PIPE)
-					return (error_message(2, input, token));
+					return (error_message(2));
 				if (token->op != PIPE && token->next->op != PIPE)
-					return (error_message(3, input, token));
+					return (error_message(3));
+				if (token->op != PIPE && token->next->op == PIPE)
+					return (error_message(2));
 			}
 		}
 		token = token->next;

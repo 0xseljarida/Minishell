@@ -31,20 +31,22 @@ void	signal_handler_input(int signum)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		glb_list()->exit_status = 130;
 	}
-	else if (signum == SIGQUIT)
-	{
-	}
 }
 
 static void	handle_heredoc_sigint(void)
 {
 	write(STDOUT_FILENO, "\n", 1);
 	glb_list()->exit_status = 130;
+	gc_free_all();
+	free_env(glb_list()->env);
+	exit(1);
 }
 
 static void	handle_heredoc_sigquit(void)
 {
 	ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
+	gc_free_all();
+	free_env(glb_list()->env);
 }
 
 void	signal_handler_heredoc(int signum)

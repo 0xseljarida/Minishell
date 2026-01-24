@@ -29,12 +29,13 @@ static int	process_redirection_token(t_tokenizer *tokens, t_tokenizer *start,
 	return (0);
 }
 
-int	redirection_infos(t_tokenizer *tokens)
+int	redirection_infos(t_tokenizer *tokens, char *input)
 {
 	int			has_error;
 	t_tokenizer	*start;
 	t_env		*env;
 
+	(void)input;
 	start = tokens;
 	env = glb_list()->env;
 	has_error = 0;
@@ -46,7 +47,10 @@ int	redirection_infos(t_tokenizer *tokens)
 		{
 			has_error = process_redirection_token(tokens, start, env);
 			if (has_error)
+			{
+				gc_free_all();
 				return (has_error);
+			}
 		}
 		tokens = tokens->next;
 	}
